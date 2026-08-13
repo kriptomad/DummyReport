@@ -1021,7 +1021,7 @@ def connection_dialog():
         # ── "Shared login" safeguard ──────────────────────────────────
         # DBA account-sharing monitoring flags Oracle sessions where the
         # DB username doesn't belong to the person actually running the
-        # connection (e.g. Bruno connecting with Ricardo's Oracle
+        # connection (e.g. User A connecting with User B's Oracle
         # account) — exactly the incident that prompted this check. If
         # this user has a registered Oracle account on file and they've
         # typed a *different* one, require an explicit acknowledgement
