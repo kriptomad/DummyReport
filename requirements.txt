@@ -20,6 +20,6 @@ google-genai>=0.2.0
 requests>=2.31.0
 github-copilot-sdk>=0.1.0
 msal>=1.28.0  # Azure AD / Entra ID auth (ServiceNow SSO integration POC)
-deep-translator>=1.11.0  # Free, no-API-key translation fallback for KB bilingual text (Internal AI / Pendências)
+deep-translator>=1.11.4  # Free, no-API-key translation fallback for KB bilingual text (Internal AI / Pendências)
 playwright>=1.61.0  # Browser automation for ServiceNow "captured session" experiment (Lab Test tab, option 5) — run `playwright install chromium` after installing
 streamlit-cookies-controller>=0.0.4  # Browser-cookie-based login session persistence (replaces the old, insecure URL-query-param token — see auth/session_store.py)
