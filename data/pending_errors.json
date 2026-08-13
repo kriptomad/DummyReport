@@ -1,0 +1,32 @@
+{
+  "items": {
+    "mock service x connection timeout": {
+      "err_msg": "Mock service X connection timeout",
+      "occurrences": 4,
+      "first_seen_at": "2026-08-07T14:01:12",
+      "last_seen_at": "2026-08-13T05:01:12",
+      "status": "pending",
+      "suggestion": {
+        "meaning": "The mock connector is not answering within the configured timeout.",
+        "how_to_check": "Review recent demo service latency and retry logs.",
+        "action": "Restart the connector and retry the sync once latency stabilizes.",
+        "responsible": "Integration Support",
+        "category": "Connectivity"
+      },
+      "similar": null,
+      "suggestion_source": "demo_seed",
+      "suggestion_generated_at": "2026-08-13T06:01:12"
+    },
+    "demo import payload missing customer id": {
+      "err_msg": "Demo import payload missing customer id",
+      "occurrences": 2,
+      "first_seen_at": "2026-08-11T14:01:12",
+      "last_seen_at": "2026-08-13T11:01:12",
+      "status": "pending",
+      "suggestion": null,
+      "similar": null,
+      "suggestion_source": null,
+      "suggestion_generated_at": null
+    }
+  }
+}

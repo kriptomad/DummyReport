@@ -1,0 +1,32 @@
+[theme]
+base = "dark"
+primaryColor = "#FFCD11"
+backgroundColor = "#0a0a0a"
+secondaryBackgroundColor = "#1c1c1c"
+textColor = "#f5f5f5"
+font = "sans serif"
+
+# Native "Light" theme — selectable by every user via the app's own
+# hamburger menu -> Settings -> Theme (or automatically if their OS/
+# browser prefers light mode). Unlike our own custom CSS overlay (see
+# ui/theme_manager.py), this is Streamlit's REAL theme engine: every
+# built-in widget (dropdowns, checkboxes, code blocks, dataframes,
+# alerts, sliders, etc.) is themed correctly and consistently, because
+# it uses Streamlit's own theme context instead of best-effort CSS
+# selectors layered on top. This is what actually fixes the "white
+# theme breaks everything / can't read anything" bug — previously there
+# was no [theme.light] section, so picking a light look only had CSS
+# painted on top of a base theme that was hardcoded to "dark", causing
+# many internal components to keep dark-on-dark or light-on-light
+# combinations that were unreadable.
+[theme.light]
+base = "light"
+primaryColor = "#caa000"
+backgroundColor = "#f7f7f8"
+secondaryBackgroundColor = "#ffffff"
+textColor = "#161616"
+font = "sans serif"
+
+[server]
+headless = true
+enableStaticServing = true

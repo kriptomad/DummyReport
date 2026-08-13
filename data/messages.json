@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "from_cws": "demo_admin",
+    "from_name": "Demo Admin",
+    "to_cws": "demo_support",
+    "to_name": "Demo Support",
+    "related_pattern": "Connection timeout while syncing orders",
+    "created_at": "2026-08-13T14:01:14",
+    "read": false,
+    "encrypted": true,
+    "payload_for_recipient": {
+      "ciphertext": "Ovk7woiorUwe2YkCAErlegKgSBWl5YoUrydZpkyW/n9gaFV1aGSaDbbxhPT803EbjoIkGCw+bx+jTABhPeQYfeUbIBkvblcbVcy5m8Q3VTn8Dt2DLkxtBQL/tzDZkC+iGK4PLsoMO6yfg4NZmdbrr1UFnzijJWpFMsn3+YNcjyyiq/N7Aos17jrFv8RF7EEcXQ==",
+      "nonce": "bpRC7Uc7Z4IoRNVu",
+      "encrypted_key": "ex8O9n/2203j+/+LKlpPhzsmwodqLdYXap3E9UzC4iHwLy0APnd7X3M1m19tNAfHmsT5aiqUjmMvOzfuxO3/r+2FclUQ25P7cj0UjvC2GMWAMQGnmnX9MQDQTMI4jMrsr/YaaTCGbm7Qoe7hZxQkhxAiz4kLz6VqsYi5I95f9R4+lJWTaqAp7SuNRRvAQdhdOSiUGKhcvePBDC73YQ/RExSKs9BUxlU3pESAg2NQLvsBwJI9+kgLVXkV/LRlOJeSJlT8q2u+sHfrbY1EqovJlRYc6e3/UHYYMCigjGx6G3ongweOdJvQrXyNsy6vCUPDRl8pPgaey//YgpcH7pBPWQ=="
+    },
+    "payload_for_sender": {
+      "ciphertext": "30N400kodyWPFYzdm1WyWYhmjMnnqgWmelWjU4fpZhoVpX9gxvghNHGRBvAostPEtagfj5f/yJsS3DUrNsxBldquE+JS6HjCgm4eRd3KL4dpHN3PxWf4y92eBrXqXBaB4KfDj9eK11tfEuBky2CWhMDfp7ugdJz90B3F9Y3vnmgKRjyUi/kf8/51kTLzh6JYTA==",
+      "nonce": "F37+0skM34m1l/rL",
+      "encrypted_key": "nYukplqBeHIO0xZrJr8qHyMIXWkD2gFRSun2cd8N7NxX5hLMhXyEcr9dNffR7qgw+BHO5PK9NVv9fW9cGMwZz417250i4bye416TWRiGY98hmBl18gYKHVfYJ6YJIOOFki0jHYUYfCJiRnQT08cv3aOXmpdsa21BampxDMCBIXjEbc5ynq9zIWrFjxYBm3CPKVCNfc5H//MXCArItiE6h8uKkkwtY3H2Rspj2WguYeo4zMchCfJEMhBkbrJ8bvN6sE1zW0S3Qu7rUO82AJwar/7EC+Nj/M0G6Pe5w8pKcNMWie2o4uPQiIkXIkS+v80SJQWktVIJJ3I4CsFc/ldFzw=="
+    }
+  },
+  {
+    "id": 2,
+    "from_cws": "demo_support",
+    "from_name": "Demo Support",
+    "to_cws": "demo_user",
+    "to_name": "Demo User",
+    "related_pattern": "Duplicate invoice reference detected",
+    "created_at": "2026-08-13T14:01:14",
+    "read": false,
+    "encrypted": true,
+    "payload_for_recipient": {
+      "ciphertext": "jQvqImw2brlEwHRyHU6eCUBYiWbvjpibsEjzsfHy01BoiRzmK1VT4tMLX1PCqdL/YNFQY8y68GUYB5rCR3VXwD/uUlo2DqQ+gkj61UlexfTUoNT8KJEf+8AMqBMkijzoHy7RcrMjuHpfWirndO6UhABZXFMQWTPnsoI5Wb1c0Ec0mzo=",
+      "nonce": "BwqNlb3KhZF18ZTo",
+      "encrypted_key": "YLMcav55F9jUV2HqUn3dpq1RdEwaCluVJUeSW6lvXBcw2p9dbJ65icngP0yd3xLeMFH1F/E0wf25WH0aDKzUGgOgOUL8ZLrvL6on+IcVdbYn+Oz8LL4RQ/Nrk8yFDCmYA/jR3SMkLG0BFtzFfW9/hOy3ka9pezaYINZTsDZWoxPmaB8I+rdJ8EWYm9s2jtWqX4eYbUqw20CjvwxeaS/i4BPYDinBfH04zV8CYJ+CRfKvvMIbpuZJYfw7ByuhqT+9RjV3XM+FcEQEX10ugBFfUog1ofvrY8JuINNq+be934rAfs3WFRF9zozOX/sNqdsA73Y70+CR57THGUyj2oE7fA=="
+    },
+    "payload_for_sender": {
+      "ciphertext": "tlUktVKleZJ+U4HzR/NhO/GW+JP5X5CYKmUWDew/Qt+V6u/I4xwASCKfnRMmie81fVQB5O5BuQ2ML0qUrOOnIFv8hOungoxLb0yyNdcPqCNpMn+VQS9QbcIEwXGsxuKXEt3rpnxX13VTImErtV+0TE3C6PHbAF3ep+b6Sl1kOgbppys=",
+      "nonce": "pdeueJpP98V3qO3k",
+      "encrypted_key": "cD6CUfNGnd113GKsEXuhLVAFDP2YnST1KOgTpGx5ICQTZXakARg3+cC20hdk4Zoj1E2vUClJysOjqvuU+3bNl9aLxVq07H6sqgkP4DLskJUIgXg5xJQpKdmsOAtFKyUjYYBIAZon5nyBA/DQVVxVR6LrckS4LKV04JAjjf4ufDldu0JifSfCb7Afnp0ydaaPvUEJH8J7TNyDU7d7FbfPwdKHIm0SZ8n0LUo06UWZYh9S5axc126j8a8zjJ/vpytlDIPlF9kPk9RhM7BmEup7ispUNFV6J7y4qAiqIeVpZXATUCcFZLMWwYRfaYxuQAHWSn1nn+7pBxkvQCzUScHFdw=="
+    }
+  }
+]

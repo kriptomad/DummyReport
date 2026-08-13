@@ -1,0 +1,48 @@
+{
+  "items": {
+    "warehouse token expired": {
+      "normalized_pattern": "warehouse token expired",
+      "representative_err_msg": "Warehouse token expired while publishing status updates",
+      "example_variants": [
+        "Warehouse token expired while publishing status updates",
+        "Token refresh failed for warehouse feed"
+      ],
+      "distinct_variants": 2,
+      "occurrences": 5,
+      "matched_kb_pattern": "Authentication token expired for warehouse feed",
+      "confidence": 0.88,
+      "proposed_meaning": "The cached API token is no longer valid.",
+      "proposed_how_to_check": "Confirm token age and recent refresh failures.",
+      "proposed_action": "Generate a new demo token and restart the connector.",
+      "proposed_responsible": "Platform Team",
+      "proposed_category": "Access",
+      "status": "pending_approval",
+      "assigned_to": "demo_support",
+      "created_at": "2026-08-12T14:01:12",
+      "created_by": "DEMOADMIN"
+    },
+    "batch invoice duplicates": {
+      "normalized_pattern": "batch invoice duplicates",
+      "representative_err_msg": "Batch import flagged repeated invoice reference values",
+      "example_variants": [
+        "Batch import flagged repeated invoice reference values"
+      ],
+      "distinct_variants": 1,
+      "occurrences": 2,
+      "suggested_patterns": [
+        {
+          "pattern": "Duplicate invoice reference detected",
+          "confidence": 0.44
+        },
+        {
+          "pattern": "Connection timeout while syncing orders",
+          "confidence": 0.12
+        }
+      ],
+      "status": "needs_teaching",
+      "assigned_to": null,
+      "created_at": "2026-08-12T20:01:12",
+      "created_by": "DEMOADMIN"
+    }
+  }
+}

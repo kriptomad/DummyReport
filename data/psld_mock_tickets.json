@@ -1,0 +1,41 @@
+[
+  {
+    "id": "mocktk0001",
+    "number": "TASK1001",
+    "state": "Resolved",
+    "short_description": "Demo order portal stuck in pending after retry",
+    "description": "The status page still shows pending although the retry job completed successfully.",
+    "created_by": "DEMOADMIN",
+    "created_at": "2026-08-08T14:01:12",
+    "extra": {
+      "category": "Order Processing",
+      "priority": "3 - Moderate"
+    }
+  },
+  {
+    "id": "mocktk0002",
+    "number": "TASK1002",
+    "state": "Closed",
+    "short_description": "Invoice connector rejected stale token",
+    "description": "The overnight sync failed because the cached token expired before the batch started.",
+    "created_by": "DEMOSUPPORT",
+    "created_at": "2026-08-10T14:01:12",
+    "extra": {
+      "category": "Invoice Sync",
+      "priority": "2 - High"
+    }
+  },
+  {
+    "id": "mocktk0003",
+    "number": "TASK1003",
+    "state": "New",
+    "short_description": "Demo import created duplicate invoice warnings",
+    "description": "A mock spreadsheet import triggered duplicate reference alerts for several rows.",
+    "created_by": "DEMOUSER",
+    "created_at": "2026-08-13T04:01:12",
+    "extra": {
+      "category": "Batch Import",
+      "priority": "4 - Low"
+    }
+  }
+]

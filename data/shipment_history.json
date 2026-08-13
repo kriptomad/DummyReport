@@ -1,0 +1,23 @@
+[
+  {
+    "shipment_id": "DEMO-1001",
+    "times_searched": 3,
+    "first_searched": "2026-08-09T14:01:12",
+    "last_searched": "2026-08-13T09:01:12",
+    "last_source": "report"
+  },
+  {
+    "shipment_id": "DEMO-2044",
+    "times_searched": 2,
+    "first_searched": "2026-08-11T14:01:12",
+    "last_searched": "2026-08-13T12:01:12",
+    "last_source": "report"
+  },
+  {
+    "shipment_id": "DEMO-3007",
+    "times_searched": 1,
+    "first_searched": "2026-08-13T04:01:12",
+    "last_searched": "2026-08-13T04:01:12",
+    "last_source": "manual"
+  }
+]

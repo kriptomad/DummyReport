@@ -1,0 +1,22 @@
+[
+  {
+    "id": "77c845ee-ff2b-4af0-aee7-d08c2e487127",
+    "ticket_number": "TASK1002",
+    "ticket_text": "Invoice connector rejected stale token during overnight sync.",
+    "source": "mock",
+    "entry_id": "snkb0002",
+    "entry_title": "Invoice sync retry for stale token",
+    "score": 0.8123,
+    "breakdown": {
+      "tfidf": 0.71,
+      "semantic": 0.83,
+      "feedback": 0.55,
+      "neural": 0.0
+    },
+    "status": "pending",
+    "created_at": "2026-08-13T07:01:12",
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "review_note": null
+  }
+]

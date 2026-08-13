@@ -1,0 +1,18 @@
+[
+  {
+    "timestamp": "2026-08-06T14:01:12",
+    "err_msg": "Connection timeout while syncing orders for region west",
+    "matched_pattern": "Connection timeout while syncing orders",
+    "kb_action": "confirmed_existing",
+    "ai_provider": "demo_seed",
+    "cws": "DEMOADMIN"
+  },
+  {
+    "timestamp": "2026-08-10T14:01:12",
+    "err_msg": "Duplicate invoice reference detected during nightly import",
+    "matched_pattern": "Duplicate invoice reference detected",
+    "kb_action": "confirmed_existing",
+    "ai_provider": "demo_seed",
+    "cws": "DEMOSUPPORT"
+  }
+]

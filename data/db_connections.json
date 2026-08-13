@@ -1,0 +1,22 @@
+[
+  {
+    "id": "demoilt001",
+    "name": "Demo Ops Primary",
+    "host": "demo-db.example.com",
+    "port": "1521",
+    "service": "DEMOOPS",
+    "default_username": "demo_reader",
+    "created_at": "2026-07-14T14:01:12",
+    "updated_at": "2026-08-08T14:01:12"
+  },
+  {
+    "id": "demopsld01",
+    "name": "Demo Ticket Analytics",
+    "host": "demo-db.example.com",
+    "port": "1521",
+    "service": "DEMOSVC",
+    "default_username": "demo_support_db",
+    "created_at": "2026-07-24T14:01:12",
+    "updated_at": "2026-08-09T14:01:12"
+  }
+]

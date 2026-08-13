@@ -1,0 +1,8 @@
+{
+  "running": false,
+  "interval_minutes": 30,
+  "started_by": "DEMOADMIN",
+  "run_count": 0,
+  "last_result": null,
+  "last_error": null
+}

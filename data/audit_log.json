@@ -1,0 +1,29 @@
+[
+  {
+    "timestamp": "2026-08-12T14:01:12",
+    "event_type": "demo_seeded",
+    "cws": "SYSTEM",
+    "detail": "Public demo content initialized.",
+    "app": "portal",
+    "category": "admin",
+    "severity": "info"
+  },
+  {
+    "timestamp": "2026-08-13T02:01:12",
+    "event_type": "mock_sync_completed",
+    "cws": "DEMOADMIN",
+    "detail": "Mock order-sync dataset refreshed successfully.",
+    "app": "ilt",
+    "category": "integration",
+    "severity": "info"
+  },
+  {
+    "timestamp": "2026-08-13T12:01:12",
+    "event_type": "mock_alert_acknowledged",
+    "cws": "DEMOSUPPORT",
+    "detail": "Reviewed demo timeout alert for warehouse feed.",
+    "app": "ilt",
+    "category": "autonomous_fix",
+    "severity": "warning"
+  }
+]

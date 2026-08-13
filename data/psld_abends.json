@@ -1,0 +1,24 @@
+[
+  {
+    "id": "abend0001",
+    "abend_number": "A123",
+    "abend_program": "DEMOORDER",
+    "resolution": "Restart the demo batch and replay the missing order file.",
+    "responsible_cws": "DEMOADMIN",
+    "ticket_number": "TASK1001",
+    "source": "manual",
+    "created_by": "DEMOADMIN",
+    "created_at": "2026-08-04T14:01:12"
+  },
+  {
+    "id": "abend0002",
+    "abend_number": "B417",
+    "abend_program": "DEMOINVOICE",
+    "resolution": "Regenerate the mock token and rerun the invoice posting step.",
+    "responsible_cws": "DEMOSUPPORT",
+    "ticket_number": "TASK1002",
+    "source": "manual",
+    "created_by": "DEMOSUPPORT",
+    "created_at": "2026-08-07T14:01:12"
+  }
+]

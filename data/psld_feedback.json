@@ -1,0 +1,9 @@
+[
+  {
+    "ticket_text": "Invoice connector rejected stale token during overnight sync.",
+    "entry_id": "snkb0002",
+    "entry_title": "Invoice sync retry for stale token",
+    "confirmed_by": "DEMOADMIN",
+    "confirmed_at": "2026-08-11T14:01:12"
+  }
+]

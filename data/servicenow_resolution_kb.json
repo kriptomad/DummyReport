@@ -1,0 +1,42 @@
+[
+  {
+    "id": "snkb0001",
+    "title": "Order status page stuck in pending",
+    "description_long": "Use this when the demo portal shows an order as pending even after the background job completed.",
+    "steps": "Clear the mock cache, rerun the status sync, and verify the order state updates.",
+    "pdf_filename": null,
+    "pdf_original_name": null,
+    "extracted_text": "cache rerun status sync order state",
+    "key_points": [
+      "Clear cache",
+      "Rerun status sync",
+      "Verify refreshed state"
+    ],
+    "extraction_error": null,
+    "source": "manual",
+    "category": "Order Processing",
+    "source_relpath": null,
+    "created_by": "DEMOADMIN",
+    "created_at": "2026-08-01T14:01:12"
+  },
+  {
+    "id": "snkb0002",
+    "title": "Invoice sync retry for stale token",
+    "description_long": "Use this when the invoice connector reports an expired or rejected token in the demo environment.",
+    "steps": "Generate a fresh demo token, restart the connector, and replay the failed invoice batch.",
+    "pdf_filename": null,
+    "pdf_original_name": null,
+    "extracted_text": "token connector replay invoice batch",
+    "key_points": [
+      "Generate fresh token",
+      "Restart connector",
+      "Replay batch"
+    ],
+    "extraction_error": null,
+    "source": "manual",
+    "category": "Invoice Sync",
+    "source_relpath": null,
+    "created_by": "DEMOADMIN",
+    "created_at": "2026-08-05T14:01:12"
+  }
+]

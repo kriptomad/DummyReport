@@ -1,0 +1,29 @@
+[
+  {
+    "type": "shipment_lookup",
+    "params": {
+      "shipment_id": "DEMO-1001"
+    },
+    "row_count": 1,
+    "error": null,
+    "timestamp": "2026-08-13T09:01:12"
+  },
+  {
+    "type": "error_summary",
+    "params": {
+      "window": "24h"
+    },
+    "row_count": 3,
+    "error": null,
+    "timestamp": "2026-08-13T10:01:12"
+  },
+  {
+    "type": "queue_diagnostics",
+    "params": {
+      "region": "west"
+    },
+    "row_count": 2,
+    "error": null,
+    "timestamp": "2026-08-13T13:01:12"
+  }
+]

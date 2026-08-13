@@ -1,0 +1,22 @@
+{
+  "connection timeout while syncing orders": {
+    "created_by": "DEMOADMIN",
+    "created_at": "2026-07-30T14:01:12",
+    "updated_by": "DEMOSUPPORT",
+    "updated_at": "2026-08-11T14:01:12",
+    "history": []
+  },
+  "duplicate invoice reference detected": {
+    "created_by": "DEMOADMIN",
+    "created_at": "2026-08-03T14:01:12",
+    "updated_by": "DEMOUSER",
+    "updated_at": "2026-08-12T14:01:12",
+    "history": [
+      {
+        "by": "DEMOADMIN",
+        "at": "2026-08-10T14:01:12",
+        "action_snapshot": "Initial duplicate cleanup guidance."
+      }
+    ]
+  }
+}
