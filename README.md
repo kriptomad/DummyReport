@@ -1,3 +1,5 @@
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)
+
 # DummyReport
 
 DummyReport is a multi-app Streamlit platform for Oracle database troubleshooting, AI-assisted reporting, and internal service operations. It was originally built as an internal support tool and is published here as a sanitized, fully-mocked portfolio demo.
