@@ -2,97 +2,99 @@
 
 # DummyReport
 
-DummyReport is a multi-app Streamlit platform for Oracle database troubleshooting, AI-assisted reporting, and internal service operations. It was originally built as an internal support tool and is published here as a sanitized, fully-mocked portfolio demo.
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)
 
-Company-specific references, real infrastructure, credentials, and business documents have been removed and replaced with fictional demo data. Every feature below works against the bundled mock dataset — no real database connection is required to explore the app. See the Disclaimer section at the end for details on what was sanitized.
+DummyReport é uma plataforma multi-app em Streamlit para troubleshooting de banco de dados Oracle, geração de relatórios assistida por IA e operações internas de suporte. Foi originalmente construída como uma ferramenta interna de suporte e é publicada aqui como uma demo de portfólio sanitizada, com dados totalmente fictícios.
 
-## What it does
+Referências específicas da empresa, infraestrutura real, credenciais e documentos de negócio foram removidos e substituídos por dados fictícios de demonstração. Todas as funcionalidades abaixo funcionam com o conjunto de dados mock incluído — não é necessária nenhuma conexão real com banco de dados para explorar o app. Veja a seção Aviso no final para detalhes sobre o que foi sanitizado.
 
-DummyReport simulates a support/ops portal for a team that troubleshoots failed transactions in an Oracle-backed logistics system. It is split into three cooperating Streamlit apps that share the same authentication/session layer:
+## O que faz
 
-| App | Port | Purpose |
+O DummyReport simula um portal de suporte/operações para um time que investiga falhas em transações de um sistema de logística apoiado em Oracle. Está dividido em três apps Streamlit que cooperam entre si e compartilham a mesma camada de autenticação/sessão:
+
+| App | Porta | Finalidade |
 |---|---|---|
-| `portal_app.py` | 8500 | Central login portal — routes an authenticated user to whichever of the two apps below they have access to, plus a unified admin dashboard |
-| `app.py` | 8501 | Main troubleshooting console: report generation, error triage, AI query building, knowledge base, and autonomous-fix review |
-| `psld_app.py` | 8502 | A second, independently-branded workspace for a different internal team, reusing the same engine with its own knowledge base, ticket queue, and learning pipeline |
+| `portal_app.py` | 8500 | Portal central de login — direciona o usuário autenticado para qual dos dois apps abaixo ele tem acesso, além de um dashboard de administração unificado |
+| `app.py` | 8501 | Console principal de troubleshooting: geração de relatórios, triagem de erros, construção de consultas com IA, base de conhecimento e revisão de correções autônomas |
+| `psld_app.py` | 8502 | Um segundo workspace, com identidade visual própria, para um time interno diferente, reaproveitando o mesmo motor com sua própria base de conhecimento, fila de tickets e pipeline de aprendizado |
 
-Both apps run on the same underlying troubleshooting/AI engine (`troubleshooter/`, `ai/`, `database/`), so improvements to matching, learning, or query-generation logic benefit both.
+Os dois apps rodam sobre o mesmo motor de troubleshooting/IA (`troubleshooter/`, `ai/`, `database/`), então melhorias em correspondência de erros, aprendizado ou geração de consultas beneficiam ambos.
 
-## Key features
+## Principais funcionalidades
 
-Authentication and administration
-- Username/password auth with PBKDF2 password hashing, per-user RSA keypairs for end-to-end encrypted internal messaging, and a key-escrow mechanism so an admin-triggered password reset doesn't destroy a user's message history
-- Self-registration with an admin-approval queue, role flags (admin, support, business/app-account, parts reviewer), and per-screen access control
-- Shared, cross-process session store (cookie-based) so a single login works across all three apps
-- Audit log covering logins, password resets, admin actions, and integration/queue failures, with category and severity tagging
+Autenticação e administração
+- Autenticação por usuário/senha com hash PBKDF2, par de chaves RSA por usuário para mensagens internas criptografadas de ponta a ponta, e um mecanismo de custódia de chave para que um reset de senha feito por admin nunca destrua o histórico de mensagens do usuário
+- Autocadastro com fila de aprovação por admin, flags de papel (admin, suporte, conta de aplicação/negócio, revisor de peças) e controle de acesso por tela
+- Armazenamento de sessão compartilhado entre processos (baseado em cookie), permitindo que um único login funcione nos três apps
+- Log de auditoria cobrindo logins, resets de senha, ações administrativas e falhas de integração/filas, com categorização e nível de severidade
 
-Troubleshooting and reporting
-- Natural-language AI query builder that converts plain-English/Portuguese questions into validated, read-only SQL
-- Fuzzy/TF-IDF error matching against a knowledge base of known issues and fixes, tolerant of near-duplicate errors that only differ by an ID, date, or location
-- Batch troubleshooting mode: paste many shipment/order IDs and get a consolidated report
-- Schema explorer, SQL glossary, and a guided visual query builder for non-SQL users
-- Excel/CSV/PDF/DOCX knowledge-base ingestion with automatic column standardization and versioned backups
+Troubleshooting e relatórios
+- Construtor de consultas em linguagem natural: converte perguntas em português/inglês em SQL validado e somente leitura
+- Correspondência de erros por fuzzy matching/TF-IDF contra uma base de conhecimento de problemas e soluções já conhecidos, tolerante a erros quase idênticos que só mudam um ID, data ou local
+- Modo de troubleshooting em lote: cole vários IDs de shipment/pedido e receba um relatório consolidado
+- Explorador de schema, glossário de SQL e um construtor visual guiado de consultas para quem não conhece SQL
+- Ingestão de base de conhecimento via Excel/CSV/PDF/DOCX, com padronização automática de colunas e backups versionados
 
-Autonomous fix (AI-assisted resolution)
-- A continuous-learning pipeline that studies historical errors and their corrections, learns to recognize failure patterns rather than exact strings, and proposes fixes for new, matching errors
-- Proposed fixes land in a pending-approval queue — nothing is applied automatically, a support/admin user has to review and approve each one
-- An AI control center in the admin dashboard to trigger and monitor training runs, with visible progress feedback
+Correção autônoma (resolução assistida por IA)
+- Um pipeline de aprendizado contínuo que estuda erros históricos e suas correções, aprende a reconhecer padrões de falha (não apenas strings exatas) e propõe correções para novos erros semelhantes
+- As correções propostas ficam em uma fila de aprovação pendente — nada é aplicado automaticamente, um usuário de suporte/admin precisa revisar e aprovar cada uma
+- Um centro de controle de IA no painel administrativo para disparar e acompanhar execuções de treinamento, com retorno visual de progresso
 
-Internal messaging and presence
-- End-to-end encrypted user-to-user messaging (RSA + AES-GCM hybrid scheme), so message bodies stay unreadable at rest
-- Online/last-seen presence indicators, Teams-style deep links, and broadcast announcements from admins
+Mensageria interna e presença
+- Mensagens criptografadas de ponta a ponta entre usuários (esquema híbrido RSA + AES-GCM), mantendo o corpo das mensagens ilegível em repouso
+- Indicadores de presença online/última vez visto, links diretos estilo Teams e avisos em broadcast enviados por admins
 
-## Technologies used
+## Tecnologias utilizadas
 
-| Layer | Stack |
+| Camada | Stack |
 |---|---|
-| UI / app framework | Streamlit, multi-page, custom theming (light/dark, color-blind-safe palettes) |
-| Database | Oracle via `oracledb` — read-only query execution, schema introspection, connection profiles |
-| Data wrangling | pandas, openpyxl, xlrd (legacy .xls), python-docx, pypdf, mammoth (DOCX to HTML viewer) |
-| Machine learning | scikit-learn (TF-IDF, clustering) and rapidfuzz for fuzzy string matching; trained state persisted with joblib |
-| AI / LLM integrations | OpenAI, Anthropic, Google Gemini, GitHub Copilot SDK — pluggable providers for text-to-SQL and chat |
-| Auth and crypto | stdlib hashlib/secrets for PBKDF2 password hashing, `cryptography` for RSA-2048 + AES-256-GCM message encryption and Fernet-based key escrow |
-| Automation (experimental) | playwright (browser-session capture experiment), msal (Azure AD/Entra ID SSO proof-of-concept) |
-| Reporting | plotly for interactive charts, custom exporters in `reports/` |
-| Persistence | flat JSON files with file locking (filelock) — no external DB server needed to run the app itself; Oracle is only the data source being inspected |
+| UI / framework do app | Streamlit, multi-página, temas customizados (claro/escuro, paletas seguras para daltonismo) |
+| Banco de dados | Oracle via `oracledb` — execução de consultas somente leitura, introspecção de schema, perfis de conexão |
+| Manipulação de dados | pandas, openpyxl, xlrd (formato .xls legado), python-docx, pypdf, mammoth (visualizador DOCX para HTML) |
+| Machine learning | scikit-learn (TF-IDF, clustering) e rapidfuzz para correspondência aproximada de strings; estado treinado persistido com joblib |
+| Integrações de IA / LLM | OpenAI, Anthropic, Google Gemini, GitHub Copilot SDK — provedores plugáveis para texto-para-SQL e chat |
+| Autenticação e criptografia | hashlib/secrets da stdlib para hash PBKDF2 de senha, `cryptography` para criptografia de mensagens RSA-2048 + AES-256-GCM e custódia de chave via Fernet |
+| Automação (experimental) | playwright (experimento de captura de sessão de navegador), msal (prova de conceito de SSO via Azure AD/Entra ID) |
+| Relatórios | plotly para gráficos interativos, exportadores customizados em `reports/` |
+| Persistência | arquivos JSON simples com file locking (filelock) — não é necessário um servidor de banco externo para rodar o app em si; o Oracle é apenas a fonte de dados inspecionada |
 
-## Setup
+## Configuração
 
 ```bash
 pip install -r requirements.txt
-streamlit run app.py            # main troubleshooting console (port 8501)
-streamlit run psld_app.py        # secondary workspace (port 8502)
-streamlit run portal_app.py      # unified login portal (port 8500)
+streamlit run app.py            # console principal de troubleshooting (porta 8501)
+streamlit run psld_app.py        # segundo workspace (porta 8502)
+streamlit run portal_app.py      # portal de login unificado (porta 8500)
 ```
 
-No real database connection is needed to log in, browse the knowledge base, or explore the admin dashboard — the bundled `data/*.json` files provide a small, working mock dataset out of the box. Connecting to a live Oracle instance is optional and configured from the UI.
+Não é necessária nenhuma conexão real com banco de dados para logar, navegar pela base de conhecimento ou explorar o painel administrativo — os arquivos `data/*.json` incluídos fornecem um conjunto de dados mock pequeno e funcional. Conectar a uma instância Oracle real é opcional e configurado pela própria interface.
 
-### Demo logins
+### Logins de demonstração
 
-| CWS / username | Password | Role |
+| CWS / usuário | Senha | Papel |
 |---|---|---|
-| `demo_admin` | `DemoPass123!` | Administrator |
-| `demo_support` | `DemoPass123!` | Support (can approve autonomous fixes) |
-| `demo_user` | `DemoPass123!` | Regular user |
+| `demo_admin` | `DemoPass123!` | Administrador |
+| `demo_support` | `DemoPass123!` | Suporte (pode aprovar correções autônomas) |
+| `demo_user` | `DemoPass123!` | Usuário comum |
 
-## Project structure
+## Estrutura do projeto
 
 ```
-app.py                 # Main troubleshooting console
-portal_app.py          # Unified login portal / router
-psld_app.py            # Secondary standalone workspace
-auth/                  # Login, sessions, roles, encrypted messaging, audit log
-ai/                     # Schema catalog, text-to-SQL, Copilot-style analysis
-troubleshooter/        # Matching engine, continuous learning, autonomous fix, KB
-database/              # Oracle connection handling, query execution, schema introspection
-ui/                     # Streamlit tab components (admin, KB, query builder, etc.)
-i18n/                   # EN/PT translation strings
-config/                 # App settings and DB connection defaults
-integrations/          # ServiceNow SSO / session-capture experiments
-reports/                # Batch processing and export helpers
-data/                   # Mock/demo JSON seed data (safe to reset/inspect)
+app.py                 # Console principal de troubleshooting
+portal_app.py          # Portal de login unificado / roteador
+psld_app.py            # Segundo workspace independente
+auth/                  # Login, sessões, papéis, mensagens criptografadas, log de auditoria
+ai/                     # Catálogo de schema, texto-para-SQL, análise estilo Copilot
+troubleshooter/        # Motor de correspondência, aprendizado contínuo, correção autônoma, KB
+database/              # Conexão Oracle, execução de consultas, introspecção de schema
+ui/                     # Componentes de abas do Streamlit (admin, KB, construtor de consultas, etc.)
+i18n/                   # Textos de tradução PT/EN
+config/                 # Configurações do app e padrões de conexão com o banco
+integrations/          # Experimentos de SSO/captura de sessão do ServiceNow
+reports/                # Processamento em lote e exportação
+data/                   # Dados mock/demo em JSON (seguro para inspecionar/resetar)
 ```
 
-## Disclaimer
+## Aviso
 
-This is a sanitized, anonymized portfolio demo derived from a private internal tool. It is not affiliated with any specific employer. Everything in this repository — user accounts, knowledge-base entries, shipment/error history, hostnames, and sample data — is fictional and generated for demonstration purposes only. Real company names, logos, credentials, internal hostnames, employee names, and proprietary business documents from the original project were removed and replaced with mock equivalents before publishing.
+Esta é uma demo de portfólio sanitizada e anonimizada, derivada de uma ferramenta interna privada. Não tem qualquer vínculo com nenhum empregador específico. Tudo neste repositório — contas de usuário, entradas da base de conhecimento, histórico de shipments/erros, hostnames e dados de exemplo — é fictício e gerado apenas para fins de demonstração. Nomes reais de empresas, logotipos, credenciais, hostnames internos, nomes de funcionários e documentos de negócio proprietários do projeto original foram removidos e substituídos por equivalentes fictícios antes da publicação.
