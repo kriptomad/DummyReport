@@ -172,7 +172,7 @@ def _assemble_sql(blocks: List[Dict[str, Any]]) -> str:
 
 
 def _pk_columns(table) -> set:
-    """Parses a TableSchema's `primary_key` string (e.g. "shpm_id, rfrc_num_typ")
+    """Parses a TableSchema's `primary_key` string (e.g. "shipment_key, reference_type")
     into a set of upper-cased column names for quick "is this a PK?" lookups."""
     raw = getattr(table, "primary_key", "") or ""
     return {c.strip().upper() for c in raw.split(",") if c.strip()}

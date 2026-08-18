@@ -583,7 +583,7 @@ def render_knowledge_base_tab():
                             f_responsible = st.text_input(t("kbtab.field_responsible"), value=str(row.get("Responsável sugerido", "")))
                             f_category = st.text_input(t("kbtab.field_category"), value=str(row.get("Categoria", "")))
                             tariff_options = ["Não", "Sim"]
-                            current_tariff = str(row.get("Precisa usar a Tariff Pool Query?", "Não")).strip() or "Não"
+                            current_tariff = str(row.get("Precisa usar a Rate Card Lookup Query?", "Não")).strip() or "Não"
                             f_tariff = st.selectbox(
                                 t("kbtab.field_needs_tariff"), options=tariff_options,
                                 index=tariff_options.index(current_tariff) if current_tariff in tariff_options else 0,

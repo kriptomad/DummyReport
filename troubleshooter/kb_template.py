@@ -45,9 +45,9 @@ FEEDER_COLUMNS = [
 EXAMPLE_ROW = [
     "Missing Rate / Lane",
     "EXAMPLE — replace with the real error message text (delete this row before uploading)",
-    "The TM system could not find a valid rate/lane for this Origin+Destination+Equipment combination.",
+    "The Routing system could not find a valid rate/lane for this Origin+Destination+Equipment combination.",
     "Sim",
-    "Check the Tariff Pool Query for this lane; confirm rate exists and is active.",
+    "Check the Rate Card Lookup Query for this lane; confirm rate exists and is active.",
     "If rate doesn't exist, escalate to Procurement with lane details. If it exists, re-run the shipment.",
     "Procurement Team",
 ]
@@ -60,7 +60,7 @@ INSTRUCTIONS = [
                         "ERR_MSG. This is the key the app matches against — be as precise as possible."),
     (COL_MEANING, "One sentence: what does this error actually mean / what's the likely root cause?"),
     (COL_NEEDS_TARIFF, "Type 'Sim' or 'Não' (Yes/No): does resolving this error usually require checking "
-                       "the Tariff Pool Query?"),
+                       "the Rate Card Lookup Query?"),
     (COL_HOW_TO_CHECK, "Short steps: how does an analyst confirm this is really the issue?"),
     (COL_ACTION, "REQUIRED. The recommended fix / resolution steps."),
     (COL_RESPONSIBLE, "Who should own/resolve this type of error (team or role name)."),
@@ -107,7 +107,7 @@ def generate_feeder_template() -> bytes:
     ws.freeze_panes = "A2"
     ws.row_dimensions[1].height = 30
 
-    # Dropdown validation for "Precisa usar a Tariff Pool Query?"
+    # Dropdown validation for "Precisa usar a Rate Card Lookup Query?"
     tariff_col_idx = FEEDER_COLUMNS.index(COL_NEEDS_TARIFF) + 1
     dv_tariff = DataValidation(type="list", formula1='"Sim,Não"', allow_blank=True)
     ws.add_data_validation(dv_tariff)

@@ -12,7 +12,7 @@ FALLBACK_CSV  = os.path.join(ASSETS_DIR, "dummytroubleshoot.csv")
 COL_CATEGORY      = "Categoria"
 COL_ERROR_PATTERN = "Mensagem de erro / padrão identificado"
 COL_MEANING       = "Significado provável"
-COL_NEEDS_TARIFF  = "Precisa usar a Tariff Pool Query?"
+COL_NEEDS_TARIFF  = "Precisa usar a Rate Card Lookup Query?"
 COL_HOW_TO_CHECK  = "Como validar"
 COL_ACTION        = "Ação recomendada"
 COL_RESPONSIBLE   = "Responsável sugerido"
@@ -67,9 +67,9 @@ COLUMN_ALIASES = {
         "Owner", "Responsible", "Team", "Responsável", "Suggested Owner",
         "Assigned To", "Responsible Team"
     ],
-    "Precisa usar a Tariff Pool Query?": [
+    "Precisa usar a Rate Card Lookup Query?": [
         "Tariff Query", "Needs Tariff Query", "Usa Tariff", "Use Tariff",
-        "Tariff Pool", "Needs Tariff"
+        "Rate Card Lookup", "Needs Tariff"
     ],
     "Significado provável (English)": [
         "Meaning (English)", "Meaning EN", "English Meaning", "Meaning_EN",
@@ -293,7 +293,7 @@ def _load_steps(path: str) -> dict:
       sub-heading instead of just another numbered step (previously these
       were rendered as flat, confusingly-double-numbered list items).
     - A real step/instruction line, optionally hand-numbered in the sheet
-      itself ("1     Rodar a Tariff Pool Query.") — that manual numbering
+      itself ("1     Rodar a Rate Card Lookup Query.") — that manual numbering
       is stripped here since the UI applies its own numbering.
     - A stray lone digit left over from a merged/wrapped Excel cell — skipped.
     """

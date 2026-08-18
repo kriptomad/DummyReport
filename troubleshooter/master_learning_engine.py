@@ -48,7 +48,7 @@ class MasterLearningEngine:
             'Categoria',
             'Mensagem de erro / padrão identificado',
             'Significado provável',
-            'Precisa usar a Tariff Pool Query?',
+            'Precisa usar a Rate Card Lookup Query?',
             'Como validar',
             'Ação recomendada',
             'Responsável sugerido'
@@ -188,8 +188,8 @@ class MasterLearningEngine:
             'Type': 'Categoria',
             'Error Type': 'Categoria',
 
-            'Tariff Query': 'Precisa usar a Tariff Pool Query?',
-            'Needs Tariff Query': 'Precisa usar a Tariff Pool Query?',
+            'Tariff Query': 'Precisa usar a Rate Card Lookup Query?',
+            'Needs Tariff Query': 'Precisa usar a Rate Card Lookup Query?',
         }
 
         # Converter para DataFrame
@@ -261,7 +261,7 @@ class MasterLearningEngine:
         # Responsáveis mais frequentes
         owners = df['Responsável sugerido'].value_counts().head(10).to_dict() if 'Responsável sugerido' in df.columns else {}
 
-        tariff_col = 'Precisa usar a Tariff Pool Query?'
+        tariff_col = 'Precisa usar a Rate Card Lookup Query?'
         tariff_query_needed = (
             len(df[df[tariff_col].astype(str).str.upper() == 'SIM'])
             if tariff_col in df.columns else 0
@@ -334,7 +334,7 @@ class MasterLearningEngine:
                     'validation': row.get('Como validar', ''),
                     'action': row.get('Ação recomendada', ''),
                     'owner': row.get('Responsável sugerido', ''),
-                    'needs_tariff': row.get('Precisa usar a Tariff Pool Query?', '')
+                    'needs_tariff': row.get('Precisa usar a Rate Card Lookup Query?', '')
                 })
 
         # Ordenar por score
@@ -539,7 +539,7 @@ def main():
 
     # Arquivos para processar (coloque os arquivos na pasta Downloads do usuário)
     new_files = [
-        os.path.join(engine.downloads_path, 'Automated TM Master Data Errors.docx'),
+        os.path.join(engine.downloads_path, 'Automated Routing Master Data Errors.docx'),
         os.path.join(engine.downloads_path, 'data master troubleshooting.xlsx'),
     ]
 

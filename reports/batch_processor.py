@@ -45,7 +45,7 @@ class BatchShipmentProcessor:
         Args:
             shipment_ids: Lista de Shipment IDs
             match_threshold: Limite de similaridade para matching
-            include_tariff_query: Se deve executar Tariff Pool Query
+            include_tariff_query: Se deve executar Rate Card Lookup Query
 
         Returns:
             Dicionário com resultados
@@ -147,12 +147,12 @@ class BatchShipmentProcessor:
         # Query para buscar dados do shipment
         query = """
         SELECT 
-            SEQ_NO, SHIPMENT_ID, PLAN_ID, OPT_REQ_ID, 
-            CONSTRAINTS_FILE, TOTAL_NO_OF_SHPM_LEGS, STATUS, ERR_MSG,
-            CRTD_DTT, CRTD_BY, UPDT_DTT, UPDT_BY,
-            EXCEL_FILE_NAME, EMAIL_TRIGGERED, ORIGIN, DESTINATION,
-            LOGISTICS_GROUP, DIV_CD, CHRG_OVRD, EQUIP_TYP_CD,
-            RECORD_STATUS, LOAD_ID, LOAD_CRTD, SHIP_CRTD, RESP_GRP
+            SEQ_NO, SHIPMENT_ID, PLAN_ID, REQUEST_ID, 
+            RULES_FILE, TOTAL_ROUTE_SEGMENTS, STATUS, ERR_MSG,
+            CRTD_DTT, CREATED_BY, UPDT_DTT, UPDATED_BY,
+            SOURCE_FILE_NAME, EMAIL_SENT, ORIGIN, DESTINATION,
+            LOGISTICS_GROUP, DIVISION_CODE, CHARGE_OVERRIDE, EQUIPMENT_TYPE_CODE,
+            RECORD_STATUS, LOAD_ID, LOAD_CREATED, SHIPMENT_CREATED, SUPPORT_GROUP
         FROM ACME_OMS.DEMO_AUDIT
         WHERE SHIPMENT_ID = :shipment_id
         ORDER BY UPDT_DTT DESC
@@ -198,7 +198,7 @@ class BatchShipmentProcessor:
                             cursor,
                             details.get('ORIGIN'),
                             details.get('DESTINATION'),
-                            details.get('EQUIP_TYP_CD')
+                            details.get('EQUIPMENT_TYPE_CODE')
                         )
 
         except Exception as e:
@@ -213,25 +213,25 @@ class BatchShipmentProcessor:
         destination: str,
         equipment: str
     ) -> Optional[List[Dict]]:
-        """Executa Tariff Pool Query"""
+        """Executa Rate Card Lookup Query"""
 
         # Query básica (pode ser customizada depois)
         query = """
         SELECT DISTINCT 
-            T.TFF_CD, T.TFF_ID, T.EFCT_DT, T.EXPD_DT, T.CARR_CD,
-            L.ORIG_ZN_CD, L.ORIG_CTRY_CD, L.DEST_ZN_CD, L.DEST_CTRY_CD,
-            L.SRVC_CD, R.CHRG_CD, R.EQMT_TYP_CD,
-            R.MIN_CHRG_DLR, RT.BRK_AMT_DLR, RT.RNG_CD,
-            C.CNCY_CD, R.EFCT_DT AS RATE_EFF, R.EXPD_DT AS RATE_EXP,
-            RT.RNG_TO, L.SRVC_GRD_TYP, L.CDTY_CD, L.BASE_DIV_CD, R.RATE_CD
-        FROM RTG_APP.LANE_ASSC_T L
-        JOIN RTG_APP.TFF_T T ON T.TFF_ID = L.TFF_ID
-        JOIN RTG_APP.RATE_T R ON R.SRVC_CD = L.SRVC_CD 
-            AND R.RATE_CD = L.RATE_CD 
-            AND R.TFF_ID = L.TFF_ID
-        JOIN RTG_APP.RNG_rate_T RT ON R.RATE_ID = RT.RATE_ID
-        JOIN RTG_APP.CNCY_T C ON C.CNCY_TYP = R.CNCY_TYP
-        WHERE T.MSTR_TFF_ID IN ('90001')
+            T.RATE_CARD_CODE, T.RATE_CARD_ID, T.EFFECTIVE_DATE, T.EXPIRATION_DATE, T.CARRIER_CODE,
+            L.ORIGIN_ZONE_CODE, L.ORIGIN_COUNTRY_CODE, L.DESTINATION_ZONE_CODE, L.DESTINATION_COUNTRY_CODE,
+            L.SERVICE_CODE, R.CHARGE_CODE, R.EQUIPMENT_TYPE_CODE,
+            R.MINIMUM_CHARGE_AMOUNT, RT.BREAK_AMOUNT, RT.RANGE_CODE,
+            C.CURRENCY_CODE, R.EFFECTIVE_DATE AS RATE_EFF, R.EXPIRATION_DATE AS RATE_EXP,
+            RT.RANGE_END, L.SERVICE_GRADE, L.COMMODITY_CODE, L.BASE_DIVISION_CODE, R.RATE_CODE
+        FROM RTG_APP.DEMO_ROUTE_RATE L
+        JOIN RTG_APP.DEMO_RATE_CARD T ON T.RATE_CARD_ID = L.RATE_CARD_ID
+        JOIN RTG_APP.DEMO_RATE R ON R.SERVICE_CODE = L.SERVICE_CODE 
+            AND R.RATE_CODE = L.RATE_CODE 
+            AND R.RATE_CARD_ID = L.RATE_CARD_ID
+        JOIN RTG_APP.RNG_rate_T RT ON R.RATE_RECORD_ID = RT.RATE_RECORD_ID
+        JOIN RTG_APP.DEMO_CURRENCY C ON C.CURRENCY_TYPE = R.CURRENCY_TYPE
+        WHERE T.MASTER_RATE_CARD_ID IN ('90001')
         AND ROWNUM <= 100
         """
 

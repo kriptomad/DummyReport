@@ -181,9 +181,9 @@ class CopilotChat:
 - Schema principal: ACME_TMS, RTG_APP
 - Tabelas principais:
   * ACME_OMS.DEMO_AUDIT (shipments e erros)
-  * RTG_APP.LANE_ASSC_T (rotas)
-  * RTG_APP.TFF_T (tarifas)
-  * RTG_APP.RATE_T (rates)
+  * RTG_APP.DEMO_ROUTE_RATE (rotas)
+  * RTG_APP.DEMO_RATE_CARD (tarifas)
+  * RTG_APP.DEMO_RATE (rates)
 
 """
 

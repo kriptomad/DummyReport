@@ -224,7 +224,7 @@ def pdf_path_for(entry: Dict[str, Any]) -> Optional[Path]:
 
 def _title_from_filename(filename: str) -> str:
     """Turns a dropped-in file's name into a reasonable KB entry title,
-    e.g. "H1CB9999_Fix_ABEND_S000.docx" -> "H1CB9999 Fix ABEND S000"."""
+    e.g. "DEMOJCL1_Fix_ABEND_S000.docx" -> "DEMOJCL1 Fix ABEND S000"."""
     stem = Path(filename).stem
     cleaned = re.sub(r"[_\-]+", " ", stem).strip()
     return cleaned or stem

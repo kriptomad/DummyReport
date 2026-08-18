@@ -1,5 +1,5 @@
 """
-Support queries derived from SQL transport files.
+Support queries derived from legacy query bundles.
 Each function receives a connection + user-friendly parameters and returns pd.DataFrame.
 """
 import pandas as pd
@@ -11,49 +11,49 @@ import pandas as pd
 # ─────────────────────────────────────────────────────────────
 SHIPMENT_DETAILS_SQL = """
 SELECT DISTINCT
-    shipment.shpm_num,
-    shipment.cust_cd,
+    shipment.shipment_number,
+    shipment.customer_code,
     shipment.status,
-    shipment.eq_typ_cd,
-    shipment.frm_shpg_loc_cd,
-    shipment.frm_name,
-    shipment.frm_ctry_cd,
-    shipment.frm_sta_cd,
-    shipment.frm_cty_name,
-    shipment.to_shpg_loc_cd,
-    shipment.to_name,
-    shipment.to_ctry_cd,
-    shipment.to_sta_cd,
-    shipment.to_cty_name,
-    shipment.pref_ap_carr_cd,
-    shipment.pref_ap_srv_cd,
-    shipment.chg_ovr_chg_cd,
-    shipment.frm_pkup_dtt,
-    shipment.to_pkup_dtt,
-    shipment.frm_dlvy_dtt,
-    shipment.to_dlvy_dtt,
-    shipment.crtd_dtt,
-    shipment.crtd_usr_cd,
-    shipment.updt_dtt,
-    shipment.updt_usr_cd,
-    shipment.scld_wgt,
+    shipment.equipment_type_code,
+    shipment.origin_location_code,
+    shipment.origin_name,
+    shipment.origin_country_code,
+    shipment.origin_state_code,
+    shipment.origin_city_name,
+    shipment.destination_location_code,
+    shipment.destination_name,
+    shipment.destination_country_code,
+    shipment.destination_state_code,
+    shipment.destination_city_name,
+    shipment.preferred_carrier_code,
+    shipment.preferred_service_code,
+    shipment.charge_override_code,
+    shipment.origin_pickup_at,
+    shipment.destination_pickup_at,
+    shipment.origin_delivery_at,
+    shipment.destination_delivery_at,
+    shipment.created_at,
+    shipment.created_by_user,
+    shipment.updated_at,
+    shipment.updated_by_user,
+    shipment.planned_weight,
     shipment.vol,
-    shipment.urgt_yn,
-    shipment.frht_trms_enu,
-    shipment.shpm_desc,
-    shipment.csld_cls
+    shipment.urgent_flag,
+    shipment.freight_terms,
+    shipment.shipment_description,
+    shipment.consolidation_class
 FROM
     ACME_TMS.shipment shipment
 WHERE
-    shipment.shpm_num = :shpm_num
+    shipment.shipment_number = :shipment_number
 """
 
 
-def run_shipment_details(conn, shpm_num: str) -> pd.DataFrame:
-    """Full shipment record from ACME_TMS.SHIPMENT by SHPM_NUM."""
+def run_shipment_details(conn, shipment_number: str) -> pd.DataFrame:
+    """Full shipment record from ACME_TMS.SHIPMENT by SHIPMENT_NUMBER."""
     cursor = conn.cursor()
     try:
-        cursor.execute(SHIPMENT_DETAILS_SQL, {"shpm_num": shpm_num.strip()})
+        cursor.execute(SHIPMENT_DETAILS_SQL, {"shipment_number": shipment_number.strip()})
         cols = [c[0] for c in cursor.description]
         rows = cursor.fetchall()
     finally:
@@ -68,16 +68,16 @@ def run_shipment_details(conn, shpm_num: str) -> pd.DataFrame:
 SHIPMENT_HISTORY_SQL = """
 SELECT *
 FROM ACME_TMS.SHIPMENT_HISTORY
-WHERE shpm_num = :shpm_num
-ORDER BY shpm_num, trans_id
+WHERE shipment_number = :shipment_number
+ORDER BY shipment_number, status_step_id
 """
 
 
-def run_shipment_history(conn, shpm_num: str) -> pd.DataFrame:
+def run_shipment_history(conn, shipment_number: str) -> pd.DataFrame:
     """Status transition history from ACME_TMS.SHIPMENT_HISTORY."""
     cursor = conn.cursor()
     try:
-        cursor.execute(SHIPMENT_HISTORY_SQL, {"shpm_num": shpm_num.strip()})
+        cursor.execute(SHIPMENT_HISTORY_SQL, {"shipment_number": shipment_number.strip()})
         cols = [c[0] for c in cursor.description]
         rows = cursor.fetchall()
     finally:
@@ -91,32 +91,32 @@ def run_shipment_history(conn, shpm_num: str) -> pd.DataFrame:
 # ─────────────────────────────────────────────────────────────
 LOAD_INFO_SQL = """
 SELECT DISTINCT
-    llt.ld_leg_id,
-    lldt.cust_cd,
-    lldt.frm_shpg_loc_cd,
-    lldt.to_shpg_loc_cd,
-    lldt.srvc_cd,
-    llt.carr_cd,
-    llt.cur_optlstat_id,
-    llt.crtd_dtt,
-    llt.updt_dtt,
-    llt.tot_scld_wgt
+    llt.load_segment_id,
+    lldt.customer_code,
+    lldt.origin_location_code,
+    lldt.destination_location_code,
+    lldt.service_code,
+    llt.carrier_code,
+    llt.current_status_id,
+    llt.created_at,
+    llt.updated_at,
+    llt.total_planned_weight
 FROM
-    RTG_APP.ld_leg_t llt
-    JOIN RTG_APP.ld_leg_detl_t lldt ON llt.ld_leg_id = lldt.ld_leg_id
-    JOIN RTG_APP.shpm_t st ON lldt.shpm_id = st.shpm_id
+    RTG_APP.DEMO_LOAD llt
+    JOIN RTG_APP.DEMO_LOAD_DETAIL lldt ON llt.load_segment_id = lldt.load_segment_id
+    JOIN RTG_APP.DEMO_SHIPMENT_LINK st ON lldt.shipment_key = st.shipment_key
 WHERE
-    st.shpm_num = :shpm_num
+    st.shipment_number = :shipment_number
 ORDER BY
-    llt.crtd_dtt DESC
+    llt.created_at DESC
 """
 
 
-def run_load_info(conn, shpm_num: str) -> pd.DataFrame:
+def run_load_info(conn, shipment_number: str) -> pd.DataFrame:
     """Load leg details — checks if a load was created for the shipment."""
     cursor = conn.cursor()
     try:
-        cursor.execute(LOAD_INFO_SQL, {"shpm_num": shpm_num.strip()})
+        cursor.execute(LOAD_INFO_SQL, {"shipment_number": shipment_number.strip()})
         cols = [c[0] for c in cursor.description]
         rows = cursor.fetchall()
     finally:
@@ -130,32 +130,32 @@ def run_load_info(conn, shpm_num: str) -> pd.DataFrame:
 # ─────────────────────────────────────────────────────────────
 LOCATION_STATUS_SQL = """
 SELECT
-    sl.shpg_loc_cd,
-    sl.shpg_loc_typ_enu,
-    sl.actv_enu,
-    sl.cust_cd,
-    sl.crtd_dtt,
-    sl.updt_dtt,
-    a.loc_name,
-    a.st_name,
-    a.cty_name,
-    a.sta_cd,
-    a.ctry_cd,
-    a.pstl_cd,
+    sl.location_code,
+    sl.location_type,
+    sl.active_flag,
+    sl.customer_code,
+    sl.created_at,
+    sl.updated_at,
+    a.location_name,
+    a.street_name,
+    a.city_name,
+    a.state_code,
+    a.country_code,
+    a.postal_code,
     a.loc
 FROM
-    RTG_APP.shpg_loc_t sl
-    INNER JOIN RTG_APP.addr_t a ON sl.addr_id = a.addr_id
+    RTG_APP.DEMO_LOCATION sl
+    INNER JOIN RTG_APP.DEMO_ADDRESS a ON sl.address_id = a.address_id
 WHERE
-    sl.shpg_loc_cd = :shpg_loc_cd
+    sl.location_code = :location_code
 """
 
 
-def run_location_status(conn, shpg_loc_cd: str) -> pd.DataFrame:
+def run_location_status(conn, location_code: str) -> pd.DataFrame:
     """Location details — checks if a location code exists and is active."""
     cursor = conn.cursor()
     try:
-        cursor.execute(LOCATION_STATUS_SQL, {"shpg_loc_cd": shpg_loc_cd.strip().upper()})
+        cursor.execute(LOCATION_STATUS_SQL, {"location_code": location_code.strip().upper()})
         cols = [c[0] for c in cursor.description]
         rows = cursor.fetchall()
     finally:
@@ -175,40 +175,40 @@ SELECT
     audit.DESTINATION                   AS audit_destination,
     audit.ERR_MSG,
     -- ORIGIN validation
-    orig_loc.shpg_loc_cd                AS origin_loc_cd,
-    orig_loc.actv_enu                   AS origin_actv_enu,
-    orig_loc.shpg_loc_typ_enu           AS origin_type,
-    orig_addr.loc_name                  AS origin_loc_name,
-    orig_addr.ctry_cd                   AS origin_ctry_cd,
-    orig_addr.sta_cd                    AS origin_sta_cd,
-    orig_addr.cty_name                  AS origin_city,
+    orig_loc.location_code                AS origin_loc_cd,
+    orig_loc.active_flag                   AS origin_active_flag,
+    orig_loc.location_type           AS origin_type,
+    orig_addr.location_name                  AS origin_loc_name,
+    orig_addr.country_code                   AS origin_ctry_cd,
+    orig_addr.state_code                    AS origin_sta_cd,
+    orig_addr.city_name                  AS origin_city,
     -- DESTINATION validation
-    dest_loc.shpg_loc_cd                AS dest_loc_cd,
-    dest_loc.actv_enu                   AS dest_actv_enu,
-    dest_loc.shpg_loc_typ_enu           AS dest_type,
-    dest_addr.loc_name                  AS dest_loc_name,
-    dest_addr.ctry_cd                   AS dest_ctry_cd,
-    dest_addr.sta_cd                    AS dest_sta_cd,
-    dest_addr.cty_name                  AS dest_city,
+    dest_loc.location_code                AS dest_loc_cd,
+    dest_loc.active_flag                   AS destination_active_flag,
+    dest_loc.location_type           AS dest_type,
+    dest_addr.location_name                  AS dest_loc_name,
+    dest_addr.country_code                   AS destination_country_code,
+    dest_addr.state_code                    AS dest_sta_cd,
+    dest_addr.city_name                  AS dest_city,
     -- Existence flags
-    CASE WHEN orig_loc.shpg_loc_cd IS NULL THEN 'NOT FOUND'
-         WHEN UPPER(orig_loc.actv_enu) IN ('0','N','NO','INACTIVE') THEN 'INACTIVE'
+    CASE WHEN orig_loc.location_code IS NULL THEN 'NOT FOUND'
+         WHEN UPPER(orig_loc.active_flag) IN ('0','N','NO','INACTIVE') THEN 'INACTIVE'
          ELSE 'ACTIVE' END              AS origin_status,
-    CASE WHEN dest_loc.shpg_loc_cd IS NULL THEN 'NOT FOUND'
-         WHEN UPPER(dest_loc.actv_enu) IN ('0','N','NO','INACTIVE') THEN 'INACTIVE'
+    CASE WHEN dest_loc.location_code IS NULL THEN 'NOT FOUND'
+         WHEN UPPER(dest_loc.active_flag) IN ('0','N','NO','INACTIVE') THEN 'INACTIVE'
          ELSE 'ACTIVE' END              AS destination_status
 FROM
     ACME_OMS.DEMO_AUDIT audit
     -- ORIGIN join
-    LEFT JOIN RTG_APP.shpg_loc_t orig_loc
-        ON UPPER(orig_loc.shpg_loc_cd) = UPPER(audit.ORIGIN)
-    LEFT JOIN RTG_APP.addr_t orig_addr
-        ON orig_loc.addr_id = orig_addr.addr_id
+    LEFT JOIN RTG_APP.DEMO_LOCATION orig_loc
+        ON UPPER(orig_loc.location_code) = UPPER(audit.ORIGIN)
+    LEFT JOIN RTG_APP.DEMO_ADDRESS orig_addr
+        ON orig_loc.address_id = orig_addr.address_id
     -- DESTINATION join
-    LEFT JOIN RTG_APP.shpg_loc_t dest_loc
-        ON UPPER(dest_loc.shpg_loc_cd) = UPPER(audit.DESTINATION)
-    LEFT JOIN RTG_APP.addr_t dest_addr
-        ON dest_loc.addr_id = dest_addr.addr_id
+    LEFT JOIN RTG_APP.DEMO_LOCATION dest_loc
+        ON UPPER(dest_loc.location_code) = UPPER(audit.DESTINATION)
+    LEFT JOIN RTG_APP.DEMO_ADDRESS dest_addr
+        ON dest_loc.address_id = dest_addr.address_id
 WHERE
     audit.SHIPMENT_ID = :shipment_id
 """
@@ -217,7 +217,7 @@ WHERE
 def run_origin_dest_validation(conn, shipment_id: str) -> pd.DataFrame:
     """
     Validates ORIGIN and DESTINATION from DEMO_AUDIT against
-    RTG_APP.shpg_loc_t. Returns existence + active status for both.
+    RTG_APP.DEMO_LOCATION. Returns existence + active status for both.
     """
     cursor = conn.cursor()
     try:
@@ -230,37 +230,37 @@ def run_origin_dest_validation(conn, shipment_id: str) -> pd.DataFrame:
 
 
 # ─────────────────────────────────────────────────────────────
-#  QUERY 5 — Reference Numbers (SRVC_CD, Equipment, etc.)
-#  Use: Un-routable errors — cross-reference with Tariff Pool SRVC_CD
+#  QUERY 5 — Reference Numbers (SERVICE_CODE, Equipment, etc.)
+#  Use: Un-routable errors — cross-reference with Rate Card Lookup SERVICE_CODE
 # ─────────────────────────────────────────────────────────────
 REFERENCE_NUMBERS_SQL = """
 SELECT DISTINCT
-    st.shpm_num,
-    st.shpm_id,
-    st.eq_typ_cd,
-    st.frm_shpg_loc_cd,
-    st.to_shpg_loc_cd,
-    rn.rfrc_num_typ,
-    rn.rfrc_num
+    st.shipment_number,
+    st.shipment_key,
+    st.equipment_type_code,
+    st.origin_location_code,
+    st.destination_location_code,
+    rn.reference_type,
+    rn.reference_value
 FROM
-    RTG_APP.shpm_t st
-    LEFT JOIN RTG_APP.rfrc_num_t rn ON st.shpm_id = rn.shpm_id
+    RTG_APP.DEMO_SHIPMENT_LINK st
+    LEFT JOIN RTG_APP.DEMO_REFERENCE rn ON st.shipment_key = rn.shipment_key
 WHERE
-    st.shpm_num = :shpm_num
-    AND rn.rfrc_num_typ IN (
-        'Container', 'Ocean BOL', 'Vessel', 'LDTP', 'UL',
-        'Transshipment Vessel', 'HAZ', 'OCN_CONT_NUM'
+    st.shipment_number = :shipment_number
+    AND rn.reference_type IN (
+        'Container', 'Ocean B/L', 'Vessel', 'DeliveryPlan', 'UL',
+        'Transshipment Vessel', 'HAZ', 'OCEAN_CONTAINER_NUMBER'
     )
 ORDER BY
-    rn.rfrc_num_typ
+    rn.reference_type
 """
 
 
-def run_reference_numbers(conn, shpm_num: str) -> pd.DataFrame:
-    """Reference numbers for a shipment — SRVC_CD, container, ocean BOL, etc."""
+def run_reference_numbers(conn, shipment_number: str) -> pd.DataFrame:
+    """Reference numbers for a shipment — SERVICE_CODE, container, ocean BOL, etc."""
     cursor = conn.cursor()
     try:
-        cursor.execute(REFERENCE_NUMBERS_SQL, {"shpm_num": shpm_num.strip()})
+        cursor.execute(REFERENCE_NUMBERS_SQL, {"shipment_number": shipment_number.strip()})
         cols = [c[0] for c in cursor.description]
         rows = cursor.fetchall()
     finally:
@@ -268,34 +268,34 @@ def run_reference_numbers(conn, shpm_num: str) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=cols)
 
 # ─────────────────────────────────────────────────────────────
-#  QUERY 6 — Load Events / TM Logs
-#  Use: "Rate exists – TM investigation required" — capture TM logs
+#  QUERY 6 — Load Events / Routing Logs
+#  Use: "Rate exists – routing-platform investigation required" — capture Routing logs
 # ─────────────────────────────────────────────────────────────
 LOAD_EVENTS_SQL = """
 SELECT
-    ev.root_obj_id,
-    ev.evnt_notf_id,
-    ev.cpld_dtt,
-    ev.evnt_id,
-    ev.evnt_typ_cd,
+    ev.root_object_id,
+    ev.event_notification_id,
+    ev.completed_at,
+    ev.event_id,
+    ev.event_type_code,
     ev.status,
-    ev.msg_txt
+    ev.message_text
 FROM
-    ACME_TMS.evnt_que_t ev
-    JOIN RTG_APP.ld_leg_detl_t lldt ON ev.root_obj_id = lldt.ld_leg_id
-    JOIN RTG_APP.shpm_t st ON lldt.shpm_id = st.shpm_id
+    ACME_TMS.DEMO_EVENT_LOG ev
+    JOIN RTG_APP.DEMO_LOAD_DETAIL lldt ON ev.root_object_id = lldt.load_segment_id
+    JOIN RTG_APP.DEMO_SHIPMENT_LINK st ON lldt.shipment_key = st.shipment_key
 WHERE
-    st.shpm_num = :shpm_num
+    st.shipment_number = :shipment_number
 ORDER BY
-    ev.cpld_dtt DESC
+    ev.completed_at DESC
 """
 
 
-def run_load_events(conn, shpm_num: str) -> pd.DataFrame:
-    """TM event queue for a shipment — useful when rate exists but routing failed."""
+def run_load_events(conn, shipment_number: str) -> pd.DataFrame:
+    """routing event log for a shipment — useful when rate exists but routing failed."""
     cursor = conn.cursor()
     try:
-        cursor.execute(LOAD_EVENTS_SQL, {"shpm_num": shpm_num.strip()})
+        cursor.execute(LOAD_EVENTS_SQL, {"shipment_number": shipment_number.strip()})
         cols = [c[0] for c in cursor.description]
         rows = cursor.fetchall()
     finally:
@@ -310,23 +310,23 @@ QUERY_CATALOGUE = {
     "shipment_details": {
         "label":       "📦 Shipment Full Details",
         "description": "Full shipment record from ACME_TMS.SHIPMENT — origin, destination, carrier, equipment, status.",
-        "param_label": "SHPM_NUM (Shipment Number)",
-        "param_key":   "shpm_num",
+        "param_label": "SHIPMENT_NUMBER (Shipment Number)",
+        "param_key":   "shipment_number",
         "fn":          run_shipment_details,
         "auto_on":     ["all"],
     },
     "shipment_history": {
         "label":       "🕓 Shipment History",
         "description": "Status transition log — shows when the error occurred and all state changes.",
-        "param_label": "SHPM_NUM (Shipment Number)",
-        "param_key":   "shpm_num",
+        "param_label": "SHIPMENT_NUMBER (Shipment Number)",
+        "param_key":   "shipment_number",
         "fn":          run_shipment_history,
         "auto_on":     ["all"],
     },
     "origin_dest_validation": {
         "label":       "📍 Origin & Destination Validation",
         "description": (
-            "Validates ORIGIN and DESTINATION from the audit record against shpg_loc_t. "
+            "Validates ORIGIN and DESTINATION from the audit record against DEMO_LOCATION. "
             "Shows if each location EXISTS and is ACTIVE — runs automatically from SHIPMENT_ID."
         ),
         "param_label": "SHIPMENT_ID",
@@ -337,32 +337,32 @@ QUERY_CATALOGUE = {
     "load_info": {
         "label":       "🚛 Load Info (Load Leg)",
         "description": "Load leg details — confirms if a load was generated from the shipment.",
-        "param_label": "SHPM_NUM (Shipment Number)",
-        "param_key":   "shpm_num",
+        "param_label": "SHIPMENT_NUMBER (Shipment Number)",
+        "param_key":   "shipment_number",
         "fn":          run_load_info,
         "auto_on":     ["missing rate", "itinerary", "schedule"],
     },
     "location_status": {
         "label":       "📍 Location Status (manual)",
         "description": "Manual lookup — checks if a specific location code exists and is active.",
-        "param_label": "SHPG_LOC_CD (Location Code)",
-        "param_key":   "shpg_loc_cd",
+        "param_label": "LOCATION_CODE (Location Code)",
+        "param_key":   "location_code",
         "fn":          run_location_status,
         "auto_on":     ["inactive", "dc not found", "master data", "logistics", "division", "equipment"],
     },
     "reference_numbers": {
         "label":       "🔢 Reference Numbers",
-        "description": "Reference numbers for the shipment — container, ocean BOL, LDTP, vessel.",
-        "param_label": "SHPM_NUM (Shipment Number)",
-        "param_key":   "shpm_num",
+        "description": "Reference numbers for the shipment — container, ocean BOL, DeliveryPlan, vessel.",
+        "param_label": "SHIPMENT_NUMBER (Shipment Number)",
+        "param_key":   "shipment_number",
         "fn":          run_reference_numbers,
         "auto_on":     ["missing rate", "itinerary", "schedule"],
     },
     "load_events": {
-        "label":       "📋 Load Events / TM Logs",
-        "description": "TM event queue — use when rate exists but routing still failed.",
-        "param_label": "SHPM_NUM (Shipment Number)",
-        "param_key":   "shpm_num",
+        "label":       "📋 Load Events / Routing Logs",
+        "description": "routing event log — use when rate exists but routing still failed.",
+        "param_label": "SHIPMENT_NUMBER (Shipment Number)",
+        "param_key":   "shipment_number",
         "fn":          run_load_events,
         "auto_on":     ["missing rate", "itinerary", "schedule"],
     },

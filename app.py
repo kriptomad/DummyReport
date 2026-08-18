@@ -78,18 +78,18 @@ from troubleshooter.fix_requests import (
 
 
 def collect_tariff_filters(prefix: str) -> dict:
-    """Collect Tariff Pool editable filters from Streamlit state."""
+    """Collect Rate Card Lookup editable filters from Streamlit state."""
     return {
-        "mstr_tff_ids": st.session_state.get(f"{prefix}_mstr_tff_ids", "").strip(),
-        "carr_cd": st.session_state.get(f"{prefix}_carr_cd", "").strip(),
-        "orig_zn_cd": st.session_state.get(f"{prefix}_orig_zn_cd", "").strip(),
-        "orig_ctry_cd": st.session_state.get(f"{prefix}_orig_ctry_cd", "").strip(),
-        "dest_zn_cd": st.session_state.get(f"{prefix}_dest_zn_cd", "").strip(),
-        "dest_ctry_cd": st.session_state.get(f"{prefix}_dest_ctry_cd", "").strip(),
-        "srvc_cd": st.session_state.get(f"{prefix}_srvc_cd", "").strip(),
-        "chrg_cd": st.session_state.get(f"{prefix}_chrg_cd", "").strip(),
-        "eqmt_typ_cd": st.session_state.get(f"{prefix}_eqmt_typ_cd", "").strip(),
-        "rate_cd": st.session_state.get(f"{prefix}_rate_cd", "").strip(),
+        "master_rate_card_ids": st.session_state.get(f"{prefix}_master_rate_card_ids", "").strip(),
+        "carrier_code": st.session_state.get(f"{prefix}_carrier_code", "").strip(),
+        "origin_zone_code": st.session_state.get(f"{prefix}_origin_zone_code", "").strip(),
+        "origin_country_code": st.session_state.get(f"{prefix}_origin_country_code", "").strip(),
+        "destination_zone_code": st.session_state.get(f"{prefix}_destination_zone_code", "").strip(),
+        "destination_country_code": st.session_state.get(f"{prefix}_destination_country_code", "").strip(),
+        "service_code": st.session_state.get(f"{prefix}_service_code", "").strip(),
+        "charge_code": st.session_state.get(f"{prefix}_charge_code", "").strip(),
+        "equipment_type_code": st.session_state.get(f"{prefix}_equipment_type_code", "").strip(),
+        "rate_code": st.session_state.get(f"{prefix}_rate_code", "").strip(),
     }
 
 
@@ -601,11 +601,11 @@ def render_troubleshoot_results(df_audit: pd.DataFrame, key_suffix: str = "singl
                     # location ID to the right code/table depends on another
                     # query they'll provide separately, so this must NOT guess
                     # and auto-run against ORIGIN/DESTINATION values from the
-                    # audit row (those aren't guaranteed to be real SHPG_LOC_CD
+                    # audit row (those aren't guaranteed to be real LOCATION_CODE
                     # codes). We only offer them as convenience suggestions the
                     # user can click to fill the box — nothing runs without an
                     # explicit "Run" click. ──
-                    if param_key == "shpg_loc_cd":
+                    if param_key == "location_code":
                         loc_suggestions = []
                         if "ORIGIN" in df_audit.columns:
                             loc_suggestions += df_audit["ORIGIN"].dropna().unique().tolist()
@@ -629,7 +629,7 @@ def render_troubleshoot_results(df_audit: pd.DataFrame, key_suffix: str = "singl
                             loc_query = loc_col.text_input(
                                 t("trouble.location_code_input"),
                                 key=loc_input_key,
-                                placeholder="e.g. USATL01",
+                                placeholder="e.g. HUB-ATL-01",
                             )
                             run_loc = btn_col.button(t("trouble.run_query_btn"), key=f"{loc_input_key}_run")
                             if run_loc:
@@ -641,55 +641,55 @@ def render_troubleshoot_results(df_audit: pd.DataFrame, key_suffix: str = "singl
                                         if df_loc.empty:
                                             st.warning(t("trouble.location_not_found", loc=loc_query.strip()), icon="⚠️")
                                         else:
-                                            actv = df_loc.iloc[0].get("ACTV_ENU", "?")
+                                            actv = df_loc.iloc[0].get("ACTIVE_FLAG", "?")
                                             badge = "🟢 Active" if str(actv).upper() in ("1", "Y", "YES", "ACTIVE", "A") else "🔴 Inactive"
-                                            st.markdown(f"**Status:** {badge}  |  `ACTV_ENU = {actv}`")
+                                            st.markdown(f"**Status:** {badge}  |  `ACTIVE_FLAG = {actv}`")
                                             st.dataframe(df_loc, width="stretch")
                                     except Exception as ex:
                                         st.error(t("trouble.location_query_error", loc=loc_query.strip(), error=ex), icon="❌")
                         continue
 
 
-                    # ── All shpm_num queries ──
-                    shpm_nums = df_audit["SHIPMENT_ID"].dropna().unique().tolist() if "SHIPMENT_ID" in df_audit.columns else []
-                    shpm_nums = [s.strip() for s in shpm_nums if s.strip()][:5]
+                    # ── All shipment_number queries ──
+                    shipment_numbers = df_audit["SHIPMENT_ID"].dropna().unique().tolist() if "SHIPMENT_ID" in df_audit.columns else []
+                    shipment_numbers = [s.strip() for s in shipment_numbers if s.strip()][:5]
 
                     with st.expander(f"{qmeta['label']} — {qmeta['description']}", expanded=(qkey in ("shipment_details", "shipment_history"))):
-                        for shpm_num in shpm_nums:
-                            st.caption(f"🚢 SHPM_NUM: `{shpm_num}`")
+                        for shipment_number in shipment_numbers:
+                            st.caption(f"🚢 SHIPMENT_NUMBER: `{shipment_number}`")
                             try:
-                                df_sq = qmeta["fn"](st.session_state["conn"], shpm_num)
+                                df_sq = qmeta["fn"](st.session_state["conn"], shipment_number)
                                 if df_sq.empty:
-                                    st.info(t("trouble.no_data_found_generic", id=shpm_num), icon="🔎")
+                                    st.info(t("trouble.no_data_found_generic", id=shipment_number), icon="🔎")
                                 else:
                                     st.dataframe(df_sq, width="stretch", height=250)
                                     ts_sq = datetime.now().strftime("%Y%m%d_%H%M%S")
                                     st.download_button(
                                         f"📥 Export {qmeta['label']}",
                                         data=df_to_csv_bytes(df_sq),
-                                        file_name=f"{qkey}_{shpm_num}_{ts_sq}.csv",
+                                        file_name=f"{qkey}_{shipment_number}_{ts_sq}.csv",
                                         mime="text/csv",
-                                        key=f"dl_{qkey}_{err_key}_{shpm_num[-6:]}",
+                                        key=f"dl_{qkey}_{err_key}_{shipment_number[-6:]}",
                                     )
                             except Exception as ex:
-                                st.error(t("trouble.query_run_error", query=qkey, id=shpm_num, error=ex), icon="❌")
+                                st.error(t("trouble.query_run_error", query=qkey, id=shipment_number, error=ex), icon="❌")
 
-            # ── Tariff Pool Query (conditional) ───────────
+            # ── Rate Card Lookup Query (conditional) ───────────
             if needs_tariff:
                 st.markdown(
                     f'<div class="section-title">{t("trouble.tariff_pool_results")}</div>',
                     unsafe_allow_html=True,
                 )
                 tariff_filters = st.session_state.get("trouble_tariff_filters", {})
-                mstr_tff_ids = str(tariff_filters.get("mstr_tff_ids", "")).strip()
+                master_rate_card_ids = str(tariff_filters.get("master_rate_card_ids", "")).strip()
 
-                if not mstr_tff_ids:
+                if not master_rate_card_ids:
                     st.warning(
                         t("trouble.requires_tariff_warning"),
                         icon="⚠️",
                     )
                 else:
-                    with st.spinner(t("trouble.running_tariff_pool", id=mstr_tff_ids)):
+                    with st.spinner(t("trouble.running_tariff_pool", id=master_rate_card_ids)):
                         try:
                             df_tariff = run_tariff_query(
                                 st.session_state["conn"],
@@ -697,12 +697,12 @@ def render_troubleshoot_results(df_audit: pd.DataFrame, key_suffix: str = "singl
                             )
                             if df_tariff.empty:
                                 st.info(
-                                    t("trouble.no_tariff_data", id=mstr_tff_ids),
+                                    t("trouble.no_tariff_data", id=master_rate_card_ids),
                                     icon="🔎",
                                 )
                             else:
                                 st.success(
-                                    t("trouble.tariff_records_found", count=len(df_tariff), id=mstr_tff_ids),
+                                    t("trouble.tariff_records_found", count=len(df_tariff), id=master_rate_card_ids),
                                 )
                                 st.dataframe(df_tariff, width="stretch", height=300)
 
@@ -711,7 +711,7 @@ def render_troubleshoot_results(df_audit: pd.DataFrame, key_suffix: str = "singl
                                 t1.download_button(
                                     t("trouble.export_tariff_csv"),
                                     data=df_to_csv_bytes(df_tariff),
-                                    file_name=f"tariff_{mstr_tff_ids}_{ts2}.csv",
+                                    file_name=f"tariff_{master_rate_card_ids}_{ts2}.csv",
                                     mime="text/csv",
                                     width="stretch",
                                     key=f"tariff_csv_{err_key}",
@@ -719,7 +719,7 @@ def render_troubleshoot_results(df_audit: pd.DataFrame, key_suffix: str = "singl
                                 t2.download_button(
                                     t("trouble.export_tariff_excel"),
                                     data=df_to_excel_bytes(df_tariff),
-                                    file_name=f"tariff_{mstr_tff_ids}_{ts2}.xlsx",
+                                    file_name=f"tariff_{master_rate_card_ids}_{ts2}.xlsx",
                                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                                     width="stretch",
                                     key=f"tariff_xlsx_{err_key}",
@@ -1552,23 +1552,23 @@ if tab_trouble is not None:
                 tf1.text_input(
                     t("trouble.mstr_tff_required"),
                     placeholder="e.g. 90001  or  90001,90002",
-                    key="t_tariff_mstr_tff_ids",
+                    key="t_tariff_master_rate_card_ids",
                 )
-                tf2.text_input("CARR_CD", placeholder="e.g. MAEU", key="t_tariff_carr_cd")
-                tf3.text_input("SRVC_CD", placeholder="e.g. AE11", key="t_tariff_srvc_cd")
+                tf2.text_input("CARRIER_CODE", placeholder="e.g. CARR-01", key="t_tariff_carrier_code")
+                tf3.text_input("SERVICE_CODE", placeholder="e.g. SRV-01", key="t_tariff_service_code")
 
                 tf4, tf5, tf6 = st.columns(3)
-                tf4.text_input("ORIG_ZN_CD", placeholder="e.g. ZN01", key="t_tariff_orig_zn_cd")
-                tf5.text_input("ORIG_CTRY_CD", placeholder="e.g. US", key="t_tariff_orig_ctry_cd")
-                tf6.text_input("CHRG_CD", placeholder="e.g. FRT", key="t_tariff_chrg_cd")
+                tf4.text_input("ORIGIN_ZONE_CODE", placeholder="e.g. ZONE-EAST", key="t_tariff_origin_zone_code")
+                tf5.text_input("ORIGIN_COUNTRY_CODE", placeholder="e.g. US", key="t_tariff_origin_country_code")
+                tf6.text_input("CHARGE_CODE", placeholder="e.g. LINEHAUL", key="t_tariff_charge_code")
 
                 tf7, tf8, tf9 = st.columns(3)
-                tf7.text_input("DEST_ZN_CD", placeholder="e.g. ZN99", key="t_tariff_dest_zn_cd")
-                tf8.text_input("DEST_CTRY_CD", placeholder="e.g. BR", key="t_tariff_dest_ctry_cd")
-                tf9.text_input("EQMT_TYP_CD", placeholder="e.g. 42G0", key="t_tariff_eqmt_typ_cd")
+                tf7.text_input("DESTINATION_ZONE_CODE", placeholder="e.g. ZONE-WEST", key="t_tariff_destination_zone_code")
+                tf8.text_input("DESTINATION_COUNTRY_CODE", placeholder="e.g. BR", key="t_tariff_destination_country_code")
+                tf9.text_input("EQUIPMENT_TYPE_CODE", placeholder="e.g. DRYBOX", key="t_tariff_equipment_type_code")
 
                 tf10, _, _ = st.columns(3)
-                tf10.text_input("RATE_CD", placeholder="e.g. RATE01", key="t_tariff_rate_cd")
+                tf10.text_input("RATE_CODE", placeholder="e.g. RATE01", key="t_tariff_rate_code")
 
                 tariff_btn_col, _ = st.columns([1, 5])
                 run_tariff_manual = tariff_btn_col.button(
@@ -1579,7 +1579,7 @@ if tab_trouble is not None:
 
                 if run_tariff_manual:
                     tariff_filters = collect_tariff_filters("t_tariff")
-                    if not tariff_filters["mstr_tff_ids"]:
+                    if not tariff_filters["master_rate_card_ids"]:
                         st.warning(t("trouble.tariff_missing_field"), icon="⚠️")
                     else:
                         with st.spinner(t("trouble.querying_tariff_pool")):
@@ -1814,25 +1814,25 @@ if tab_sql is not None:
             param_key   = selected_meta["param_key"]
             param_label = selected_meta["param_label"]
 
-            if param_key == "shpg_loc_cd":
+            if param_key == "location_code":
                 param_value = st.text_input(
                     param_label,
-                    placeholder="e.g. A6522Y0  or  JJ11",
+                    placeholder="e.g. HUB-ATL-01  or  NODE-11",
                     key="sql_param_loc",
                     help="Location Code — one at a time for this query",
                 )
             elif param_key == "shipment_id":
                 param_value = st.text_input(
                     param_label,
-                    placeholder="e.g. 1060-44542",
+                    placeholder="e.g. DEMO-44542",
                     key="sql_param_shipment_id",
                     help="SHIPMENT_ID from DEMO_AUDIT",
                 )
             else:
                 param_value = st.text_input(
                     param_label,
-                    placeholder="e.g. MFG-IB-T-16957434584520000",
-                    key="sql_param_shpm",
+                    placeholder="e.g. DEMO-SHP-2026-000001",
+                    key="sql_param_shipment",
                 )
 
             run_sql_col, _ = st.columns([1, 5])
@@ -1874,9 +1874,9 @@ if tab_sql is not None:
                 if df_sql.empty:
                     st.info(t("sql.no_results"), icon="🔎")
                 else:
-                    # Highlight ACTV_ENU if location query
-                    if rkey == "location_status" and "ACTV_ENU" in df_sql.columns:
-                        actv = str(df_sql.iloc[0].get("ACTV_ENU", "")).upper()
+                    # Highlight ACTIVE_FLAG if location query
+                    if rkey == "location_status" and "ACTIVE_FLAG" in df_sql.columns:
+                        actv = str(df_sql.iloc[0].get("ACTIVE_FLAG", "")).upper()
                         if actv in ("1", "Y", "YES", "ACTIVE", "A"):
                             st.success(t("sql.location_active"))
                         else:

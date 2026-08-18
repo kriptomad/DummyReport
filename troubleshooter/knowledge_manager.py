@@ -47,7 +47,7 @@ class KnowledgeBaseManager:
             'Categoria',
             'Mensagem de erro / padrão identificado',
             'Significado provável',
-            'Precisa usar a Tariff Pool Query?',
+            'Precisa usar a Rate Card Lookup Query?',
             'Como validar',
             'Ação recomendada',
             'Responsável sugerido'
@@ -80,7 +80,7 @@ class KnowledgeBaseManager:
                 'Owner', 'Responsible', 'Team', 'Responsável', 'Responsavel',
                 'Suggested_Owner', 'SuggestedOwner', 'owner', 'responsible'
             ],
-            'Precisa usar a Tariff Pool Query?': [
+            'Precisa usar a Rate Card Lookup Query?': [
                 'Tariff Query', 'Needs Tariff Query', 'Usa Tariff', 'Needs_Tariff',
                 'NeedsTariff', 'needs_tariff', 'tariff_query'
             ]
@@ -516,7 +516,7 @@ class KnowledgeBaseManager:
             'total_entries': len(df),
             'categories': df['Categoria'].nunique(),
             'category_breakdown': df['Categoria'].value_counts().to_dict(),
-            'needs_tariff': df['Precisa usar a Tariff Pool Query?'].value_counts().to_dict(),
+            'needs_tariff': df['Precisa usar a Rate Card Lookup Query?'].value_counts().to_dict(),
             'version': self.get_current_version(),
             'last_updated': self._kb_cache_time.isoformat() if self._kb_cache_time else None
         }
@@ -619,9 +619,9 @@ class KnowledgeBaseManager:
             'Probable Meaning': 'Significado provável',
 
             # Variações de Tariff Query
-            'Tariff Query': 'Precisa usar a Tariff Pool Query?',
-            'Needs Tariff Query': 'Precisa usar a Tariff Pool Query?',
-            'Use Tariff Query': 'Precisa usar a Tariff Pool Query?',
+            'Tariff Query': 'Precisa usar a Rate Card Lookup Query?',
+            'Needs Tariff Query': 'Precisa usar a Rate Card Lookup Query?',
+            'Use Tariff Query': 'Precisa usar a Rate Card Lookup Query?',
 
             # Variações de Validação
             'Validation': 'Como validar',
@@ -720,7 +720,7 @@ class KnowledgeBaseManager:
                     'categoria': row['Categoria'],
                     'padrao': row['Mensagem de erro / padrão identificado'],
                     'significado': row['Significado provável'],
-                    'precisa_tariff_query': row['Precisa usar a Tariff Pool Query?'],
+                    'precisa_tariff_query': row['Precisa usar a Rate Card Lookup Query?'],
                     'como_validar': row['Como validar'],
                     'acao_recomendada': row['Ação recomendada'],
                     'responsavel': row['Responsável sugerido']

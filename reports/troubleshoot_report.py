@@ -134,7 +134,7 @@ def build_troubleshoot_report_bytes(
             "How to Validate":      top.get(COL_HOW_TO_CHECK, "—"),
             "Recommended Action":   top.get(COL_ACTION, "—"),
             "Suggested Owner":      top.get(COL_RESPONSIBLE, "—"),
-            "Needs Tariff Pool Query": "Yes" if item.get("needs_tariff") else "No",
+            "Needs Rate Card Lookup Query": "Yes" if item.get("needs_tariff") else "No",
             "KB Freshness":         _FRESHNESS_LABEL.get(fresh_color, fresh_color),
             "Freshness Detail":     fresh_detail,
             "KB Created By":        kb_meta.get("created_by", "SYSTEM"),

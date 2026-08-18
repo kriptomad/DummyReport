@@ -203,7 +203,7 @@ def render_ai_query_tab(conn, current_shipment_id: Optional[str] = None):
             for i, param in enumerate(params):
                 with cols[i]:
                     # Auto-preenche se for shipment_id
-                    default = current_shipment_id if param in ["shpm_num", "shipment_id"] else ""
+                    default = current_shipment_id if param in ["shipment_number", "shipment_id"] else ""
                     param_values[param] = st.text_input(
                         f":{param}",
                         value=default,

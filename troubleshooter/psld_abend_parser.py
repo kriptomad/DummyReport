@@ -8,23 +8,22 @@ program caused it?" detector — this is the "intelligence" the Excel/
 Mock Data importer runs over every row so the team doesn't have to
 manually flag which ServiceNow tickets are ABENDs.
 
-Real-world example this was built against (short description as
-exported from ServiceNow's legacy batch scheduler alerts):
+Demo example used to illustrate the parser format:
 
-    Incident AJS002E ABEND=S000 U0004 H1CB9999(JOB16989)
-    JCL=B.H1CB9999 B8SCH182025 - 1 Jul 2026 05:01:30
+    Incident DEMO42 ABEND=S000 U0004 DEMOJCL1(JOB12345)
+    JCL=OPS.DEMOJCL1 DEMO-SCHED-01 - 1 Jul 2026 05:01:30
 
 Here:
   - "ABEND=S000 U0004"     -> the abend code (system code + optional
                               user completion code).
-  - "H1CB9999(JOB16989)"   -> the job name and its run/job number.
-  - "JCL=B.H1CB9999"       -> the JCL library.member reference — the
+  - "DEMOJCL1(JOB12345)"   -> the job name and its run/job number.
+  - "JCL=OPS.DEMOJCL1"       -> the JCL library.member reference — the
                               PROGRAM that reported the abend is the
                               part after the last '.' (or the whole
                               token if there's no '.').
 
 Resolution notes often instead (or additionally) name the program as
-free text, e.g. "JOB H1CE0725" — used as a fallback when the short
+free text, e.g. "JOB DEMOPGM1" — used as a fallback when the short
 description has no JCL= reference.
 
 Neither pattern is guaranteed to be present on every real ticket (the
@@ -51,17 +50,17 @@ _ABEND_CODE_RE = re.compile(
 # ignored.
 _ABEND_WORD_RE = re.compile(r"\bABEND\b", re.IGNORECASE)
 
-# "JCL=B.H1CB9999" -> captures "B.H1CB9999"; program is whatever comes
+# "JCL=OPS.DEMOJCL1" -> captures "B.H1CB9999"; program is whatever comes
 # after the last '.' (or the whole thing if there's no '.').
 _JCL_RE = re.compile(r"JCL[=:]\s*([A-Za-z0-9_.\-]+)", re.IGNORECASE)
 
 # The job name + run number in parens right after it, e.g.
-# "H1CB9999(JOB16989)".
+# "DEMOJCL1(JOB12345)".
 _JOB_PAREN_RE = re.compile(r"([A-Za-z0-9]{4,10})\((JOB\d+)\)", re.IGNORECASE)
 
 # Fallback: resolution notes calling out the program as free text,
-# e.g. "JOB H1CE0725" (requires whitespace between "JOB" and the code,
-# so it doesn't accidentally match a job-number token like "JOB16989").
+# e.g. "JOB DEMOPGM1" (requires whitespace between "JOB" and the code,
+# so it doesn't accidentally match a job-number token like "JOB12345").
 _RESOLUTION_JOB_RE = re.compile(r"\bJOB\s+([A-Za-z0-9]{4,10})\b", re.IGNORECASE)
 
 
