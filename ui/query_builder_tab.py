@@ -31,7 +31,7 @@ try:
 except Exception:  # pragma: no cover - defensive, schema manager should always import
     SchemaManager = None  # type: ignore
 
-# Matches a SCHEMA.TABLE token (e.g. "TMS_OMS.SHIPMENT") so we can tell
+# Matches a SCHEMA.TABLE token (e.g. "ACME_TMS.SHIPMENT") so we can tell
 # which tables are already referenced by the FROM/JOIN blocks — used to
 # cross-reference against the Schema Manager's registered relationships
 # and suggest useful JOINs.

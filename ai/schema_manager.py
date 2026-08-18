@@ -13,7 +13,7 @@ from dataclasses import dataclass, asdict
 class TableSchema:
     """Represents a database table schema."""
     name: str
-    schema: str  # TMS_OMS, I2TM_APP, etc.
+    schema: str  # ACME_TMS, RTG_APP, etc.
     columns: List[str]
     description: str
     primary_key: str
@@ -87,7 +87,7 @@ class SchemaManager:
         default_tables = [
             TableSchema(
                 name="SHIPMENT",
-                schema="TMS_OMS",
+                schema="ACME_TMS",
                 columns=[
                     "shpm_num", "cust_cd", "status", "eq_typ_cd",
                     "frm_shpg_loc_cd", "frm_name", "frm_ctry_cd", "frm_sta_cd", "frm_cty_name",
@@ -102,14 +102,14 @@ class SchemaManager:
             ),
             TableSchema(
                 name="SHIPMENT_HISTORY",
-                schema="TMS_OMS",
+                schema="ACME_TMS",
                 columns=["shpm_num", "trans_id", "status", "crtd_dtt", "crtd_usr_cd"],
                 description="Histórico de transições de status do shipment",
                 primary_key="shpm_num, trans_id"
             ),
             TableSchema(
-                name="INTL_DUMMY_DEMO_AUDIT",
-                schema="TMS_OMS",
+                name="DEMO_AUDIT",
+                schema="ACME_OMS",
                 columns=[
                     "SEQ_NO", "SHIPMENT_ID", "PLAN_ID", "OPT_REQ_ID", "CONSTRAINTS_FILE",
                     "TOTAL_NO_OF_SHPM_LEGS", "STATUS", "ERR_MSG", "CRTD_DTT", "CRTD_BY",
@@ -121,8 +121,8 @@ class SchemaManager:
                 primary_key="SHIPMENT_ID"
             ),
             TableSchema(
-                name="I2_EVNT_QUE_T",
-                schema="TMS_OMS",
+                name="EVNT_QUE_T",
+                schema="ACME_TMS",
                 columns=[
                     "root_obj_id", "evnt_notf_id", "cpld_dtt",
                     "evnt_id", "evnt_typ_cd", "status", "msg_txt"
@@ -132,7 +132,7 @@ class SchemaManager:
             ),
             TableSchema(
                 name="SHPG_LOC_T",
-                schema="I2TM_APP",
+                schema="RTG_APP",
                 columns=[
                     "shpg_loc_cd", "shpg_loc_typ_enu", "actv_enu",
                     "cust_cd", "addr_id", "crtd_dtt", "updt_dtt"
@@ -142,7 +142,7 @@ class SchemaManager:
             ),
             TableSchema(
                 name="ADDR_T",
-                schema="I2TM_APP",
+                schema="RTG_APP",
                 columns=[
                     "addr_id", "loc_name", "st_name", "cty_name",
                     "sta_cd", "ctry_cd", "pstl_cd", "loc"
@@ -152,7 +152,7 @@ class SchemaManager:
             ),
             TableSchema(
                 name="LD_LEG_T",
-                schema="I2TM_APP",
+                schema="RTG_APP",
                 columns=[
                     "ld_leg_id", "carr_cd", "cur_optlstat_id",
                     "crtd_dtt", "updt_dtt", "tot_scld_wgt"
@@ -162,7 +162,7 @@ class SchemaManager:
             ),
             TableSchema(
                 name="LD_LEG_DETL_T",
-                schema="I2TM_APP",
+                schema="RTG_APP",
                 columns=[
                     "ld_leg_id", "shpm_id", "cust_cd",
                     "frm_shpg_loc_cd", "to_shpg_loc_cd", "srvc_cd"
@@ -172,17 +172,17 @@ class SchemaManager:
             ),
             TableSchema(
                 name="SHPM_T",
-                schema="I2TM_APP",
+                schema="RTG_APP",
                 columns=[
                     "shpm_id", "shpm_num", "eq_typ_cd",
                     "frm_shpg_loc_cd", "to_shpg_loc_cd", "cust_cd"
                 ],
-                description="Tabela de shipments no I2TM (mirror do TMS_OMS)",
+                description="Tabela de shipments no RTG_APP (mirror do ACME_TMS)",
                 primary_key="shpm_id"
             ),
             TableSchema(
                 name="RFRC_NUM_T",
-                schema="I2TM_APP",
+                schema="RTG_APP",
                 columns=[
                     "shpm_id", "rfrc_num_typ", "rfrc_num", "crtd_dtt"
                 ],
@@ -192,7 +192,7 @@ class SchemaManager:
             # Tariff Pool tables
             TableSchema(
                 name="TFF_T",
-                schema="I2TM_APP",
+                schema="RTG_APP",
                 columns=[
                     "TFF_ID", "TFF_CD", "MSTR_TFF_ID", "EFCT_DT", "EXPD_DT", "CARR_CD"
                 ],
@@ -201,7 +201,7 @@ class SchemaManager:
             ),
             TableSchema(
                 name="LANE_ASSC_T",
-                schema="I2TM_APP",
+                schema="RTG_APP",
                 columns=[
                     "TFF_ID", "RATE_CD", "SRVC_CD", "ORIG_ZN_CD", "ORIG_CTRY_CD",
                     "DEST_ZN_CD", "DEST_CTRY_CD", "SRVC_GRD_TYP", "CDTY_CD", "BASE_DIV_CD"
@@ -211,7 +211,7 @@ class SchemaManager:
             ),
             TableSchema(
                 name="RATE_T",
-                schema="I2TM_APP",
+                schema="RTG_APP",
                 columns=[
                     "RATE_ID", "TFF_ID", "RATE_CD", "SRVC_CD", "CHRG_CD",
                     "EQMT_TYP_CD", "MIN_CHRG_DLR", "CNCY_TYP", "EFCT_DT", "EXPD_DT"
@@ -221,7 +221,7 @@ class SchemaManager:
             ),
             TableSchema(
                 name="RNG_RATE_T",
-                schema="I2TM_APP",
+                schema="RTG_APP",
                 columns=[
                     "RATE_ID", "RNG_CD", "BRK_AMT_DLR", "RNG_TO"
                 ],
@@ -230,7 +230,7 @@ class SchemaManager:
             ),
             TableSchema(
                 name="CNCY_T",
-                schema="I2TM_APP",
+                schema="RTG_APP",
                 columns=[
                     "CNCY_TYP", "CNCY_CD"
                 ],
@@ -246,80 +246,80 @@ class SchemaManager:
         # Default relationships
         self.relationships = [
             SchemaRelationship(
-                from_table="TMS_OMS.SHIPMENT",
-                to_table="I2TM_APP.SHPG_LOC_T",
+                from_table="ACME_TMS.SHIPMENT",
+                to_table="RTG_APP.SHPG_LOC_T",
                 from_column="frm_shpg_loc_cd",
                 to_column="shpg_loc_cd",
                 join_type="LEFT",
                 description="Origem do shipment"
             ),
             SchemaRelationship(
-                from_table="TMS_OMS.SHIPMENT",
-                to_table="I2TM_APP.SHPG_LOC_T",
+                from_table="ACME_TMS.SHIPMENT",
+                to_table="RTG_APP.SHPG_LOC_T",
                 from_column="to_shpg_loc_cd",
                 to_column="shpg_loc_cd",
                 join_type="LEFT",
                 description="Destino do shipment"
             ),
             SchemaRelationship(
-                from_table="I2TM_APP.SHPG_LOC_T",
-                to_table="I2TM_APP.ADDR_T",
+                from_table="RTG_APP.SHPG_LOC_T",
+                to_table="RTG_APP.ADDR_T",
                 from_column="addr_id",
                 to_column="addr_id",
                 join_type="INNER",
                 description="Endereço da localização"
             ),
             SchemaRelationship(
-                from_table="I2TM_APP.SHPM_T",
-                to_table="I2TM_APP.LD_LEG_DETL_T",
+                from_table="RTG_APP.SHPM_T",
+                to_table="RTG_APP.LD_LEG_DETL_T",
                 from_column="shpm_id",
                 to_column="shpm_id",
                 join_type="LEFT",
                 description="Shipment → Load details"
             ),
             SchemaRelationship(
-                from_table="I2TM_APP.LD_LEG_DETL_T",
-                to_table="I2TM_APP.LD_LEG_T",
+                from_table="RTG_APP.LD_LEG_DETL_T",
+                to_table="RTG_APP.LD_LEG_T",
                 from_column="ld_leg_id",
                 to_column="ld_leg_id",
                 join_type="INNER",
                 description="Load details → Load leg"
             ),
             SchemaRelationship(
-                from_table="I2TM_APP.SHPM_T",
-                to_table="I2TM_APP.RFRC_NUM_T",
+                from_table="RTG_APP.SHPM_T",
+                to_table="RTG_APP.RFRC_NUM_T",
                 from_column="shpm_id",
                 to_column="shpm_id",
                 join_type="LEFT",
                 description="Reference numbers"
             ),
             SchemaRelationship(
-                from_table="I2TM_APP.LANE_ASSC_T",
-                to_table="I2TM_APP.TFF_T",
+                from_table="RTG_APP.LANE_ASSC_T",
+                to_table="RTG_APP.TFF_T",
                 from_column="TFF_ID",
                 to_column="TFF_ID",
                 join_type="INNER",
                 description="Lane → Tariff"
             ),
             SchemaRelationship(
-                from_table="I2TM_APP.RATE_T",
-                to_table="I2TM_APP.LANE_ASSC_T",
+                from_table="RTG_APP.RATE_T",
+                to_table="RTG_APP.LANE_ASSC_T",
                 from_column="TFF_ID",
                 to_column="TFF_ID",
                 join_type="INNER",
                 description="Rate → Lane (via TFF_ID + SRVC_CD + RATE_CD)"
             ),
             SchemaRelationship(
-                from_table="I2TM_APP.RNG_RATE_T",
-                to_table="I2TM_APP.RATE_T",
+                from_table="RTG_APP.RNG_RATE_T",
+                to_table="RTG_APP.RATE_T",
                 from_column="RATE_ID",
                 to_column="RATE_ID",
                 join_type="INNER",
                 description="Rate ranges"
             ),
             SchemaRelationship(
-                from_table="I2TM_APP.RATE_T",
-                to_table="I2TM_APP.CNCY_T",
+                from_table="RTG_APP.RATE_T",
+                to_table="RTG_APP.CNCY_T",
                 from_column="CNCY_TYP",
                 to_column="CNCY_TYP",
                 join_type="INNER",

@@ -1,0 +1,373 @@
+{
+  "tables": [
+    {
+      "name": "SHIPMENT",
+      "schema": "ACME_TMS",
+      "columns": [
+        "shpm_num",
+        "cust_cd",
+        "status",
+        "eq_typ_cd",
+        "frm_shpg_loc_cd",
+        "frm_name",
+        "frm_ctry_cd",
+        "frm_sta_cd",
+        "frm_cty_name",
+        "to_shpg_loc_cd",
+        "to_name",
+        "to_ctry_cd",
+        "to_sta_cd",
+        "to_cty_name",
+        "pref_ap_carr_cd",
+        "pref_ap_srv_cd",
+        "chg_ovr_chg_cd",
+        "frm_pkup_dtt",
+        "to_pkup_dtt",
+        "frm_dlvy_dtt",
+        "to_dlvy_dtt",
+        "crtd_dtt",
+        "crtd_usr_cd",
+        "updt_dtt",
+        "updt_usr_cd",
+        "scld_wgt",
+        "vol",
+        "urgt_yn",
+        "frht_trms_enu",
+        "shpm_desc",
+        "csld_cls"
+      ],
+      "description": "Tabela principal de shipments — contém origem, destino, carrier, equipment, status",
+      "primary_key": "shpm_num",
+      "column_types": null,
+      "sample_joins": null
+    },
+    {
+      "name": "SHIPMENT_HISTORY",
+      "schema": "ACME_TMS",
+      "columns": [
+        "shpm_num",
+        "trans_id",
+        "status",
+        "crtd_dtt",
+        "crtd_usr_cd"
+      ],
+      "description": "Histórico de transições de status do shipment",
+      "primary_key": "shpm_num, trans_id",
+      "column_types": null,
+      "sample_joins": null
+    },
+    {
+      "name": "DEMO_AUDIT",
+      "schema": "ACME_OMS",
+      "columns": [
+        "SEQ_NO",
+        "SHIPMENT_ID",
+        "PLAN_ID",
+        "OPT_REQ_ID",
+        "CONSTRAINTS_FILE",
+        "TOTAL_NO_OF_SHPM_LEGS",
+        "STATUS",
+        "ERR_MSG",
+        "CRTD_DTT",
+        "CRTD_BY",
+        "UPDT_DTT",
+        "UPDT_BY",
+        "EXCEL_FILE_NAME",
+        "EMAIL_TRIGGERED",
+        "ORIGIN",
+        "DESTINATION",
+        "LOGISTICS_GROUP",
+        "DIV_CD",
+        "CHRG_OVRD",
+        "EQUIP_TYP_CD",
+        "RECORD_STATUS",
+        "LOAD_ID",
+        "LOAD_CRTD",
+        "SHIP_CRTD",
+        "RESP_GRP"
+      ],
+      "description": "Auditoria de shipments internacionais — contém erros e validações de origem/destino",
+      "primary_key": "SHIPMENT_ID",
+      "column_types": null,
+      "sample_joins": null
+    },
+    {
+      "name": "EVNT_QUE_T",
+      "schema": "ACME_TMS",
+      "columns": [
+        "root_obj_id",
+        "evnt_notf_id",
+        "cpld_dtt",
+        "evnt_id",
+        "evnt_typ_cd",
+        "status",
+        "msg_txt"
+      ],
+      "description": "Fila de eventos do TM — logs de processamento de loads",
+      "primary_key": "evnt_notf_id",
+      "column_types": null,
+      "sample_joins": null
+    },
+    {
+      "name": "SHPG_LOC_T",
+      "schema": "RTG_APP",
+      "columns": [
+        "shpg_loc_cd",
+        "shpg_loc_typ_enu",
+        "actv_enu",
+        "cust_cd",
+        "addr_id",
+        "crtd_dtt",
+        "updt_dtt"
+      ],
+      "description": "Códigos de localização (origem/destino) — valida se está ativo",
+      "primary_key": "shpg_loc_cd",
+      "column_types": null,
+      "sample_joins": null
+    },
+    {
+      "name": "ADDR_T",
+      "schema": "RTG_APP",
+      "columns": [
+        "addr_id",
+        "loc_name",
+        "st_name",
+        "cty_name",
+        "sta_cd",
+        "ctry_cd",
+        "pstl_cd",
+        "loc"
+      ],
+      "description": "Endereços das localizações (join com SHPG_LOC_T)",
+      "primary_key": "addr_id",
+      "column_types": null,
+      "sample_joins": null
+    },
+    {
+      "name": "LD_LEG_T",
+      "schema": "RTG_APP",
+      "columns": [
+        "ld_leg_id",
+        "carr_cd",
+        "cur_optlstat_id",
+        "crtd_dtt",
+        "updt_dtt",
+        "tot_scld_wgt"
+      ],
+      "description": "Legs de carga (loads) — verifica se load foi criado",
+      "primary_key": "ld_leg_id",
+      "column_types": null,
+      "sample_joins": null
+    },
+    {
+      "name": "LD_LEG_DETL_T",
+      "schema": "RTG_APP",
+      "columns": [
+        "ld_leg_id",
+        "shpm_id",
+        "cust_cd",
+        "frm_shpg_loc_cd",
+        "to_shpg_loc_cd",
+        "srvc_cd"
+      ],
+      "description": "Detalhes do leg — liga shipment ao load",
+      "primary_key": "ld_leg_id, shpm_id",
+      "column_types": null,
+      "sample_joins": null
+    },
+    {
+      "name": "SHPM_T",
+      "schema": "RTG_APP",
+      "columns": [
+        "shpm_id",
+        "shpm_num",
+        "eq_typ_cd",
+        "frm_shpg_loc_cd",
+        "to_shpg_loc_cd",
+        "cust_cd"
+      ],
+      "description": "Tabela de shipments no RTG_APP (mirror do ACME_TMS)",
+      "primary_key": "shpm_id",
+      "column_types": null,
+      "sample_joins": null
+    },
+    {
+      "name": "RFRC_NUM_T",
+      "schema": "RTG_APP",
+      "columns": [
+        "shpm_id",
+        "rfrc_num_typ",
+        "rfrc_num",
+        "crtd_dtt"
+      ],
+      "description": "Números de referência — container, ocean BOL, vessel, LDTP",
+      "primary_key": "shpm_id, rfrc_num_typ",
+      "column_types": null,
+      "sample_joins": null
+    },
+    {
+      "name": "TFF_T",
+      "schema": "RTG_APP",
+      "columns": [
+        "TFF_ID",
+        "TFF_CD",
+        "MSTR_TFF_ID",
+        "EFCT_DT",
+        "EXPD_DT",
+        "CARR_CD"
+      ],
+      "description": "Tariff master — contém carrier e datas de validade",
+      "primary_key": "TFF_ID",
+      "column_types": null,
+      "sample_joins": null
+    },
+    {
+      "name": "LANE_ASSC_T",
+      "schema": "RTG_APP",
+      "columns": [
+        "TFF_ID",
+        "RATE_CD",
+        "SRVC_CD",
+        "ORIG_ZN_CD",
+        "ORIG_CTRY_CD",
+        "DEST_ZN_CD",
+        "DEST_CTRY_CD",
+        "SRVC_GRD_TYP",
+        "CDTY_CD",
+        "BASE_DIV_CD"
+      ],
+      "description": "Lane associations — liga tariff a rotas específicas",
+      "primary_key": "TFF_ID, RATE_CD, SRVC_CD",
+      "column_types": null,
+      "sample_joins": null
+    },
+    {
+      "name": "RATE_T",
+      "schema": "RTG_APP",
+      "columns": [
+        "RATE_ID",
+        "TFF_ID",
+        "RATE_CD",
+        "SRVC_CD",
+        "CHRG_CD",
+        "EQMT_TYP_CD",
+        "MIN_CHRG_DLR",
+        "CNCY_TYP",
+        "EFCT_DT",
+        "EXPD_DT"
+      ],
+      "description": "Rates — taxas por serviço e equipment",
+      "primary_key": "RATE_ID",
+      "column_types": null,
+      "sample_joins": null
+    },
+    {
+      "name": "RNG_RATE_T",
+      "schema": "RTG_APP",
+      "columns": [
+        "RATE_ID",
+        "RNG_CD",
+        "BRK_AMT_DLR",
+        "RNG_TO"
+      ],
+      "description": "Rate ranges — faixas de valores da tarifa",
+      "primary_key": "RATE_ID, RNG_CD",
+      "column_types": null,
+      "sample_joins": null
+    },
+    {
+      "name": "CNCY_T",
+      "schema": "RTG_APP",
+      "columns": [
+        "CNCY_TYP",
+        "CNCY_CD"
+      ],
+      "description": "Currency types — moedas",
+      "primary_key": "CNCY_TYP",
+      "column_types": null,
+      "sample_joins": null
+    }
+  ],
+  "relationships": [
+    {
+      "from_table": "ACME_TMS.SHIPMENT",
+      "to_table": "RTG_APP.SHPG_LOC_T",
+      "from_column": "frm_shpg_loc_cd",
+      "to_column": "shpg_loc_cd",
+      "join_type": "LEFT",
+      "description": "Origem do shipment"
+    },
+    {
+      "from_table": "ACME_TMS.SHIPMENT",
+      "to_table": "RTG_APP.SHPG_LOC_T",
+      "from_column": "to_shpg_loc_cd",
+      "to_column": "shpg_loc_cd",
+      "join_type": "LEFT",
+      "description": "Destino do shipment"
+    },
+    {
+      "from_table": "RTG_APP.SHPG_LOC_T",
+      "to_table": "RTG_APP.ADDR_T",
+      "from_column": "addr_id",
+      "to_column": "addr_id",
+      "join_type": "INNER",
+      "description": "Endereço da localização"
+    },
+    {
+      "from_table": "RTG_APP.SHPM_T",
+      "to_table": "RTG_APP.LD_LEG_DETL_T",
+      "from_column": "shpm_id",
+      "to_column": "shpm_id",
+      "join_type": "LEFT",
+      "description": "Shipment → Load details"
+    },
+    {
+      "from_table": "RTG_APP.LD_LEG_DETL_T",
+      "to_table": "RTG_APP.LD_LEG_T",
+      "from_column": "ld_leg_id",
+      "to_column": "ld_leg_id",
+      "join_type": "INNER",
+      "description": "Load details → Load leg"
+    },
+    {
+      "from_table": "RTG_APP.SHPM_T",
+      "to_table": "RTG_APP.RFRC_NUM_T",
+      "from_column": "shpm_id",
+      "to_column": "shpm_id",
+      "join_type": "LEFT",
+      "description": "Reference numbers"
+    },
+    {
+      "from_table": "RTG_APP.LANE_ASSC_T",
+      "to_table": "RTG_APP.TFF_T",
+      "from_column": "TFF_ID",
+      "to_column": "TFF_ID",
+      "join_type": "INNER",
+      "description": "Lane → Tariff"
+    },
+    {
+      "from_table": "RTG_APP.RATE_T",
+      "to_table": "RTG_APP.LANE_ASSC_T",
+      "from_column": "TFF_ID",
+      "to_column": "TFF_ID",
+      "join_type": "INNER",
+      "description": "Rate → Lane (via TFF_ID + SRVC_CD + RATE_CD)"
+    },
+    {
+      "from_table": "RTG_APP.RNG_RATE_T",
+      "to_table": "RTG_APP.RATE_T",
+      "from_column": "RATE_ID",
+      "to_column": "RATE_ID",
+      "join_type": "INNER",
+      "description": "Rate ranges"
+    },
+    {
+      "from_table": "RTG_APP.RATE_T",
+      "to_table": "RTG_APP.CNCY_T",
+      "from_column": "CNCY_TYP",
+      "to_column": "CNCY_TYP",
+      "join_type": "INNER",
+      "description": "Currency"
+    }
+  ]
+}

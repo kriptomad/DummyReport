@@ -180,16 +180,16 @@ def run_tariff_query(
             L.CDTY_CD,
             L.BASE_DIV_CD,
             R.RATE_CD
-        FROM I2TM_APP.LANE_ASSC_T L
-        JOIN I2TM_APP.TFF_T T
+        FROM RTG_APP.LANE_ASSC_T L
+        JOIN RTG_APP.TFF_T T
             ON T.TFF_ID = L.TFF_ID
-        JOIN I2TM_APP.RATE_T R
+        JOIN RTG_APP.RATE_T R
             ON R.SRVC_CD = L.SRVC_CD
             AND R.RATE_CD = L.RATE_CD
             AND R.TFF_ID = L.TFF_ID
-        JOIN I2TM_APP.RNG_RATE_T RT
+        JOIN RTG_APP.RNG_RATE_T RT
             ON R.RATE_ID = RT.RATE_ID
-        JOIN I2TM_APP.CNCY_T C
+        JOIN RTG_APP.CNCY_T C
             ON C.CNCY_TYP = R.CNCY_TYP
         WHERE 1 = 1
         """

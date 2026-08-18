@@ -1825,7 +1825,7 @@ TRANSLATIONS = {
     "schema_mgr.import_success": {"en": "✅ Schema imported successfully! {count} table(s) processed.", "pt": "✅ Schema importado com sucesso! {count} tabela(s) processada(s)."},
     "schema_mgr.import_error": {"en": "Error importing: {error}", "pt": "Erro ao importar: {error}"},
     "schema_mgr.schema_label": {"en": "Schema", "pt": "Schema"},
-    "schema_mgr.schema_help": {"en": "e.g. TMS_OMS, I2TM_APP", "pt": "Ex: TMS_OMS, I2TM_APP"},
+    "schema_mgr.schema_help": {"en": "e.g. ACME_TMS, RTG_APP", "pt": "Ex: ACME_TMS, RTG_APP"},
     "schema_mgr.table_name_label": {"en": "Table Name", "pt": "Nome da Tabela"},
     "schema_mgr.table_name_help": {"en": "e.g. CARRIER_T", "pt": "Ex: CARRIER_T"},
     "schema_mgr.primary_key_label": {"en": "Primary Key", "pt": "Primary Key"},

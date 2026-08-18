@@ -1551,7 +1551,7 @@ if tab_trouble is not None:
                 tf1, tf2, tf3 = st.columns(3)
                 tf1.text_input(
                     t("trouble.mstr_tff_required"),
-                    placeholder="e.g. 52742  or  52742,52743",
+                    placeholder="e.g. 90001  or  90001,90002",
                     key="t_tariff_mstr_tff_ids",
                 )
                 tf2.text_input("CARR_CD", placeholder="e.g. MAEU", key="t_tariff_carr_cd")
@@ -1826,7 +1826,7 @@ if tab_sql is not None:
                     param_label,
                     placeholder="e.g. 1060-44542",
                     key="sql_param_shipment_id",
-                    help="SHIPMENT_ID from INTL_DUMMY_DEMO_AUDIT",
+                    help="SHIPMENT_ID from DEMO_AUDIT",
                 )
             else:
                 param_value = st.text_input(

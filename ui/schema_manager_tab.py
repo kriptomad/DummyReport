@@ -193,7 +193,7 @@ def _render_add_table_form(manager: SchemaManager):
     # data types straight from Oracle before ever typing anything by hand.
     st.markdown(f"##### {t('schema_mgr.autofill_heading')}")
     af1, af2, af3 = st.columns([2, 2, 1])
-    af_schema = af1.text_input(t("schema_mgr.schema_label"), key="schema_autofill_schema", placeholder="I2TM_APP")
+    af_schema = af1.text_input(t("schema_mgr.schema_label"), key="schema_autofill_schema", placeholder="RTG_APP")
     af_table = af2.text_input(t("schema_mgr.table_name_label"), key="schema_autofill_table", placeholder="SHIPMENTS")
     conn = st.session_state.get("conn")
     connected = st.session_state.get("connected", False)
@@ -230,7 +230,7 @@ def _render_add_table_form(manager: SchemaManager):
 
         with col1:
             schema = st.text_input(
-                t("schema_mgr.schema_label"), value=prefill.get("schema", "I2TM_APP"), help=t("schema_mgr.schema_help"),
+                t("schema_mgr.schema_label"), value=prefill.get("schema", "RTG_APP"), help=t("schema_mgr.schema_help"),
             )
             table_name = st.text_input(
                 t("schema_mgr.table_name_label"), value=prefill.get("table", ""), help=t("schema_mgr.table_name_help"),

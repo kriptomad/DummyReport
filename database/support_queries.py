@@ -7,7 +7,6 @@ import pandas as pd
 
 # ─────────────────────────────────────────────────────────────
 #  QUERY 1 — Shipment Full Details
-#  Source: Shipment search ADM2.sql
 #  Use: Always run when analysing a SHIPMENT_ID
 # ─────────────────────────────────────────────────────────────
 SHIPMENT_DETAILS_SQL = """
@@ -44,14 +43,14 @@ SELECT DISTINCT
     shipment.shpm_desc,
     shipment.csld_cls
 FROM
-    tms_oms.shipment shipment
+    ACME_TMS.shipment shipment
 WHERE
     shipment.shpm_num = :shpm_num
 """
 
 
 def run_shipment_details(conn, shpm_num: str) -> pd.DataFrame:
-    """Full shipment record from TMS_OMS.SHIPMENT by SHPM_NUM."""
+    """Full shipment record from ACME_TMS.SHIPMENT by SHPM_NUM."""
     cursor = conn.cursor()
     try:
         cursor.execute(SHIPMENT_DETAILS_SQL, {"shpm_num": shpm_num.strip()})
@@ -64,19 +63,18 @@ def run_shipment_details(conn, shpm_num: str) -> pd.DataFrame:
 
 # ─────────────────────────────────────────────────────────────
 #  QUERY 2 — Shipment History
-#  Source: ticket SCTASK2570565.sql (SHIPMENT_HISTORY table)
 #  Use: Always run — shows status transitions and when error occurred
 # ─────────────────────────────────────────────────────────────
 SHIPMENT_HISTORY_SQL = """
 SELECT *
-FROM TMS_OMS.SHIPMENT_HISTORY
+FROM ACME_TMS.SHIPMENT_HISTORY
 WHERE shpm_num = :shpm_num
 ORDER BY shpm_num, trans_id
 """
 
 
 def run_shipment_history(conn, shpm_num: str) -> pd.DataFrame:
-    """Status transition history from TMS_OMS.SHIPMENT_HISTORY."""
+    """Status transition history from ACME_TMS.SHIPMENT_HISTORY."""
     cursor = conn.cursor()
     try:
         cursor.execute(SHIPMENT_HISTORY_SQL, {"shpm_num": shpm_num.strip()})
@@ -89,7 +87,6 @@ def run_shipment_history(conn, shpm_num: str) -> pd.DataFrame:
 
 # ─────────────────────────────────────────────────────────────
 #  QUERY 3 — Load Info (Load Leg)
-#  Source: Getting Loads to Tmops Bol Batch.sql
 #  Use: Un-routable errors — confirms if load was generated
 # ─────────────────────────────────────────────────────────────
 LOAD_INFO_SQL = """
@@ -105,9 +102,9 @@ SELECT DISTINCT
     llt.updt_dtt,
     llt.tot_scld_wgt
 FROM
-    i2tm_app.ld_leg_t llt
-    JOIN i2tm_app.ld_leg_detl_t lldt ON llt.ld_leg_id = lldt.ld_leg_id
-    JOIN i2tm_app.shpm_t st ON lldt.shpm_id = st.shpm_id
+    RTG_APP.ld_leg_t llt
+    JOIN RTG_APP.ld_leg_detl_t lldt ON llt.ld_leg_id = lldt.ld_leg_id
+    JOIN RTG_APP.shpm_t st ON lldt.shpm_id = st.shpm_id
 WHERE
     st.shpm_num = :shpm_num
 ORDER BY
@@ -129,7 +126,6 @@ def run_load_info(conn, shpm_num: str) -> pd.DataFrame:
 
 # ─────────────────────────────────────────────────────────────
  #  QUERY 4 — Location Status (manual — single location code)
-#  Source: Sprint 16 queries.sql (shpg_loc_t + addr_t)
 #  Use: Manual lookup of any location code
 # ─────────────────────────────────────────────────────────────
 LOCATION_STATUS_SQL = """
@@ -148,8 +144,8 @@ SELECT
     a.pstl_cd,
     a.loc
 FROM
-    i2tm_app.shpg_loc_t sl
-    INNER JOIN i2tm_app.addr_t a ON sl.addr_id = a.addr_id
+    RTG_APP.shpg_loc_t sl
+    INNER JOIN RTG_APP.addr_t a ON sl.addr_id = a.addr_id
 WHERE
     sl.shpg_loc_cd = :shpg_loc_cd
 """
@@ -169,7 +165,6 @@ def run_location_status(conn, shpg_loc_cd: str) -> pd.DataFrame:
 
 # ─────────────────────────────────────────────────────────────
 #  QUERY 4B — Origin & Destination Validation (automatic)
-#  Source: Sprint 16 queries.sql + INTL_DUMMY_DEMO_AUDIT
 #  Use: Validates ORIGIN and DESTINATION from the audit record
 #       directly — no manual input needed, runs from SHIPMENT_ID
 # ─────────────────────────────────────────────────────────────
@@ -205,14 +200,14 @@ SELECT
 FROM
     ACME_OMS.DEMO_AUDIT audit
     -- ORIGIN join
-    LEFT JOIN i2tm_app.shpg_loc_t orig_loc
+    LEFT JOIN RTG_APP.shpg_loc_t orig_loc
         ON UPPER(orig_loc.shpg_loc_cd) = UPPER(audit.ORIGIN)
-    LEFT JOIN i2tm_app.addr_t orig_addr
+    LEFT JOIN RTG_APP.addr_t orig_addr
         ON orig_loc.addr_id = orig_addr.addr_id
     -- DESTINATION join
-    LEFT JOIN i2tm_app.shpg_loc_t dest_loc
+    LEFT JOIN RTG_APP.shpg_loc_t dest_loc
         ON UPPER(dest_loc.shpg_loc_cd) = UPPER(audit.DESTINATION)
-    LEFT JOIN i2tm_app.addr_t dest_addr
+    LEFT JOIN RTG_APP.addr_t dest_addr
         ON dest_loc.addr_id = dest_addr.addr_id
 WHERE
     audit.SHIPMENT_ID = :shipment_id
@@ -221,8 +216,8 @@ WHERE
 
 def run_origin_dest_validation(conn, shipment_id: str) -> pd.DataFrame:
     """
-    Validates ORIGIN and DESTINATION from INTL_DUMMY_DEMO_AUDIT against
-    i2tm_app.shpg_loc_t. Returns existence + active status for both.
+    Validates ORIGIN and DESTINATION from DEMO_AUDIT against
+    RTG_APP.shpg_loc_t. Returns existence + active status for both.
     """
     cursor = conn.cursor()
     try:
@@ -236,7 +231,6 @@ def run_origin_dest_validation(conn, shipment_id: str) -> pd.DataFrame:
 
 # ─────────────────────────────────────────────────────────────
 #  QUERY 5 — Reference Numbers (SRVC_CD, Equipment, etc.)
-#  Source: Preload Services List.sql + Select getRefDataForStops.sql
 #  Use: Un-routable errors — cross-reference with Tariff Pool SRVC_CD
 # ─────────────────────────────────────────────────────────────
 REFERENCE_NUMBERS_SQL = """
@@ -249,8 +243,8 @@ SELECT DISTINCT
     rn.rfrc_num_typ,
     rn.rfrc_num
 FROM
-    i2tm_app.shpm_t st
-    LEFT JOIN i2tm_app.rfrc_num_t rn ON st.shpm_id = rn.shpm_id
+    RTG_APP.shpm_t st
+    LEFT JOIN RTG_APP.rfrc_num_t rn ON st.shpm_id = rn.shpm_id
 WHERE
     st.shpm_num = :shpm_num
     AND rn.rfrc_num_typ IN (
@@ -273,10 +267,8 @@ def run_reference_numbers(conn, shpm_num: str) -> pd.DataFrame:
         cursor.close()
     return pd.DataFrame(rows, columns=cols)
 
-
 # ─────────────────────────────────────────────────────────────
 #  QUERY 6 — Load Events / TM Logs
-#  Source: Getting Loads to Tmops Bol Batch.sql (i2_evnt_que_t)
 #  Use: "Rate exists – TM investigation required" — capture TM logs
 # ─────────────────────────────────────────────────────────────
 LOAD_EVENTS_SQL = """
@@ -289,9 +281,9 @@ SELECT
     ev.status,
     ev.msg_txt
 FROM
-    tms_oms.i2_evnt_que_t ev
-    JOIN i2tm_app.ld_leg_detl_t lldt ON ev.root_obj_id = lldt.ld_leg_id
-    JOIN i2tm_app.shpm_t st ON lldt.shpm_id = st.shpm_id
+    ACME_TMS.evnt_que_t ev
+    JOIN RTG_APP.ld_leg_detl_t lldt ON ev.root_obj_id = lldt.ld_leg_id
+    JOIN RTG_APP.shpm_t st ON lldt.shpm_id = st.shpm_id
 WHERE
     st.shpm_num = :shpm_num
 ORDER BY
@@ -317,7 +309,7 @@ def run_load_events(conn, shpm_num: str) -> pd.DataFrame:
 QUERY_CATALOGUE = {
     "shipment_details": {
         "label":       "📦 Shipment Full Details",
-        "description": "Full shipment record from TMS_OMS.SHIPMENT — origin, destination, carrier, equipment, status.",
+        "description": "Full shipment record from ACME_TMS.SHIPMENT — origin, destination, carrier, equipment, status.",
         "param_label": "SHPM_NUM (Shipment Number)",
         "param_key":   "shpm_num",
         "fn":          run_shipment_details,

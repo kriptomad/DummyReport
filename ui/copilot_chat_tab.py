@@ -178,12 +178,12 @@ class CopilotChat:
 
 ## CONTEXTO DO PROJETO:
 - Banco de dados: Oracle
-- Schema principal: TMS_OMS, I2TM_APP
+- Schema principal: ACME_TMS, RTG_APP
 - Tabelas principais:
   * ACME_OMS.DEMO_AUDIT (shipments e erros)
-  * I2TM_APP.LANE_ASSC_T (rotas)
-  * I2TM_APP.TFF_T (tarifas)
-  * I2TM_APP.RATE_T (rates)
+  * RTG_APP.LANE_ASSC_T (rotas)
+  * RTG_APP.TFF_T (tarifas)
+  * RTG_APP.RATE_T (rates)
 
 """
 
