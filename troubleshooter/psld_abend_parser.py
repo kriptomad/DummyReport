@@ -50,7 +50,7 @@ _ABEND_CODE_RE = re.compile(
 # ignored.
 _ABEND_WORD_RE = re.compile(r"\bABEND\b", re.IGNORECASE)
 
-# "JCL=OPS.DEMOJCL1" -> captures "B.H1CB9999"; program is whatever comes
+# "JCL=OPS.DEMOJCL1" -> captures "OPS.DEMOJCL1"; program is whatever comes
 # after the last '.' (or the whole thing if there's no '.').
 _JCL_RE = re.compile(r"JCL[=:]\s*([A-Za-z0-9_.\-]+)", re.IGNORECASE)
 
